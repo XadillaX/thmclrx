@@ -19,7 +19,71 @@
 #include <v8.h>
 #include <vector>
 #include "octree.h"
+#include "mindiffer.h"
 using namespace std;
+
+Handle<Value> MindifferGet(const Arguments& args)
+{
+    HandleScope scope;
+
+    if(args.Length() < 1)
+    {
+        ThrowException(Exception::TypeError(String::New("Wrong number of arguments.")));
+        return scope.Close(Undefined());
+    }
+
+    Local<Value> _rgbArray = args[0];
+    vector<RGBWithCount> rgbArray;
+
+    // tranform color param
+    if(!MinDiffer::TransformColorParam(_rgbArray, &rgbArray))
+    {
+        for(int i = 0; i < rgbArray.size(); i++)
+        {
+            g_PoolRGB.Recycle(rgbArray[i].rgb);
+        }
+
+        rgbArray.clear();
+
+        return scope.Close(Undefined());
+    }
+
+    // color palette
+    vector<Palette> palette;
+    if(args.Length() == 1) Palette::GetDefaultPalette(&palette);
+    else
+    {
+        Local<Value> _palette = args[1];
+        Palette::V8ToPalette(_palette, &palette);
+    }
+
+    MinDiffer mindiffer(&rgbArray, &palette);
+
+    // calculate...
+    vector<ColorCount*> colorCount;
+    mindiffer.calculate(&colorCount);
+
+    // translate vector to v8::Array
+    Local<Array> result = Array::New(colorCount.size());
+    for(int i = 0; i < colorCount.size(); i++)
+    {
+        Local<Object> obj = Object::New();
+        obj->Set(String::NewSymbol("color"), String::NewSymbol(colorCount[i]->color));
+        obj->Set(String::NewSymbol("count"), Integer::New(colorCount[i]->count));
+
+        result->Set(i, obj);
+    }
+
+    // recycle something
+    for(int i = 0; i < rgbArray.size(); i++)
+    {
+        g_PoolRGB.Recycle(rgbArray[i].rgb);
+    }
+    rgbArray.clear();
+    Octree::recycleColorCount(&colorCount);    
+
+    return scope.Close(result);
+}
 
 Handle<Value> OctreeGet(const Arguments& args)
 {
@@ -122,6 +186,8 @@ void Init(Handle<Object> exports)
 {
     exports->Set(String::NewSymbol("octreeGet"),
             FunctionTemplate::New(OctreeGet)->GetFunction());
+    exports->Set(String::NewSymbol("mindifferGet"),
+            FunctionTemplate::New(MindifferGet)->GetFunction());
     exports->Set(String::NewSymbol("cleanPool"),
             FunctionTemplate::New(CleanPool)->GetFunction());
 }

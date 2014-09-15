@@ -15,6 +15,9 @@
  *
  * =====================================================================================
  */
+#ifndef __OCTREE_H__
+#define __OCTREE_H__
+
 #include <v8.h>
 #include "common.h"
 #include <list>
@@ -52,4 +55,6 @@ public:
     static void recycleColorCount(vector<ColorCount*>* colors);
     static void cleanPool();
 };
+
+#endif
 

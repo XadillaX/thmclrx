@@ -154,6 +154,7 @@ void Octree::reduceTree()
 
     node->isLeaf = true;
     node->red = r;
+    node->green = g;
     node->blue = b;
     node->pixelCount = count;
     leafCount++;
@@ -170,6 +171,10 @@ void Octree::colorStats(OctreeNode* node, vector<ColorCount*>* colors)
         ColorCount* cnt = g_PoolColorCount.Create();
         sprintf(cnt->color, "%.2X%.2X%.2X", r, g, b);
         cnt->count = node->pixelCount;
+        cnt->colorValue = (r << 16) + (g << 8) + b;
+        cnt->red = r;
+        cnt->green = g;
+        cnt->blue = b;
 
         colors->push_back(cnt);
 

@@ -5,6 +5,7 @@
             "sources": [
                 "src/thmclrx.cpp",
                 "src/octree.cpp",
+                "src/mindiffer.cpp",
                 "src/common.cpp"
             ]
         }

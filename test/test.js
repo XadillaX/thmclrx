@@ -18,7 +18,7 @@ getPixel("pic.jpg", function(err, pixels) {
         array.push({ r: r, g: g, b: b });
     }
 
-    result = thmclrx.octreeGet(array);
+    result = thmclrx.mindifferGet(array);//thmclrx.octreeGet(array);
     console.log("done");
 
     var string = "";
@@ -27,6 +27,9 @@ getPixel("pic.jpg", function(err, pixels) {
     }
 
     fs.writeFileSync("test.html", string, "utf8");
-    thmclrx.cleanPool();
+
+    //thmclrx.mindifferGet(result);
+
+    process.exit(0);
 });
 
