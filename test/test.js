@@ -18,7 +18,7 @@ getPixel("pic.jpg", function(err, pixels) {
         array.push({ r: r, g: g, b: b });
     }
 
-    result = thmclrx.mindifferGet(array);//thmclrx.octreeGet(array);
+    result = thmclrx.octreeGet(array, 8);
     console.log("done");
 
     var string = "";
@@ -28,7 +28,14 @@ getPixel("pic.jpg", function(err, pixels) {
 
     fs.writeFileSync("test.html", string, "utf8");
 
-    //thmclrx.mindifferGet(result);
+    result = thmclrx.mindifferGet(result);
+    string = "";
+    for(var i = 0; i < result.length; i++) {
+        string += "<div style=\"width: 50px; height: 21px; float: left; margin-right: 5px; margin-bottom: 5px; background: #" + result[i].color + "; color: #fff; font-size: 12px; text-align: center; padding-top: 9px;\">" + result[i].count + "</div>";
+    }
+
+    fs.writeFileSync("test2.html", string, "utf8");
+    console.log("done");
 
     process.exit(0);
 });

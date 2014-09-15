@@ -73,8 +73,7 @@ void Octree::buildTree(RGB* pixels[], int pixelCount, int maxColor)
     for(int i = 0; i < pixelCount; i++)
     {
         addColor(root, pixels[i], 0);
-
-        if(leafCount > maxColor) reduceTree();
+        while(leafCount > maxColor) reduceTree();
     }
 }
 
@@ -126,8 +125,8 @@ void Octree::reduceTree()
 {
     // find the deepest level of node
     int lv = 6;
-    while(reducible[lv].empty() && lv > 0) lv--;
-    if(lv == 0) return;
+    while(reducible[lv].empty() && lv >= 0) lv--;
+    if(lv < 0) return;
 
     // get the node and remove it from reducible link
     OctreeNode* node = reducible[lv].front();

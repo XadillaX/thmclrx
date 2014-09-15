@@ -26,7 +26,6 @@ int abs(int a, int b)
     return c < 0 ? -c : c;
 }
 
-
 bool MinDiffer::TransformColorParam(Local<Value> param, vector<RGBWithCount>* rgb)
 {
     HandleScope scope;
@@ -63,17 +62,18 @@ bool MinDiffer::TransformColorParam(Local<Value> param, vector<RGBWithCount>* rg
 
         if(obj->Get(_ColorParamKeys[0])->IsString() &&
                 obj->Get(_ColorParamKeys[1])->IsInt32() &&
-                Local<String>::Cast(obj->Get(_ColorParamKeys[0]))->Length() > 6)
+                Local<String>::Cast(obj->Get(_ColorParamKeys[0]))->Length() >= 6)
         {
             Local<String>::Cast(obj->Get(_ColorParamKeys[0]))->WriteAscii(colorStr, 0, 6);
 
             // is all [0123456789ABCDEF]
-            for(int i = 0; i < 6; i++)
+            for(int j = 0; j < 6; j++)
             {
-                if(!(colorStr[i] >= '0' && colorStr[i] <= 9) &&
-                        !(colorStr[i] >= 'A' && colorStr[i] <= 'Z'))
+                if(!(colorStr[j] >= '0' && colorStr[j] <= '9') &&
+                        !(colorStr[j] >= 'A' && colorStr[j] <= 'F') &&
+                        !(colorStr[j] >= 'a' && colorStr[j] <= 'f'))
                 {
-                    ThrowException(Exception::TypeError(String::New("Wrong argument in color pixel array.")));
+                    ThrowException(Exception::TypeError(String::New("Wrong argument in color pixel array 1.")));
                     scope.Close(Undefined());
                     return false;
                 }
@@ -109,7 +109,7 @@ bool MinDiffer::TransformColorParam(Local<Value> param, vector<RGBWithCount>* rg
         }
         else
         {
-            ThrowException(Exception::TypeError(String::New("Wrong argument in color pixel array.")));
+            ThrowException(Exception::TypeError(String::New("Wrong argument in color pixel array 2.")));
             scope.Close(Undefined());
             return false;
         }
