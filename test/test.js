@@ -33,8 +33,6 @@ for(var i = 0; i < 35500; i++) {
 }
 var result = thmclrx.cpp.mindifferGet(rgb);
 console.log(result);
-result = thmclrx.cpp.mindifferGet(rgb);
-console.log(result);
 
 //thmclrx.mindiffGet("pic.jpg", function(err, result) {
 //     if(err) {
