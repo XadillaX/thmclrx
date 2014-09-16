@@ -298,6 +298,10 @@ namespace thmclrx
     {
         HandleScope scope;
 
+        Local<String> symbolR = String::New("r");
+        Local<String> symbolG = String::New("g");
+        Local<String> symbolB = String::New("b");
+
         if(!value->IsArray())
         {
             GetDefaultPalette(palette);

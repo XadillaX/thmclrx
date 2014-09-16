@@ -80,7 +80,7 @@ Handle<Value> MindifferGet(const Arguments& args)
         g_PoolRGB.Recycle(rgbArray[i].rgb);
     }
     rgbArray.clear();
-    Octree::recycleColorCount(&colorCount);    
+    Octree::recycleColorCount(&colorCount);
 
     return scope.Close(result);
 }

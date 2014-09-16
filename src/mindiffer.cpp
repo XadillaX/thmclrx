@@ -20,7 +20,7 @@
 using namespace std;
 using namespace thmclrx;
 
-int abs(int a, int b)
+inline int abs(int a, int b)
 {
     int c = a - b;
     return c < 0 ? -c : c;
@@ -30,7 +30,7 @@ bool MinDiffer::TransformColorParam(Local<Value> param, vector<RGBWithCount>* rg
 {
     HandleScope scope;
 
-    static Local<String> _ColorParamKeys[] = {
+    Local<String> _ColorParamKeys[] = {
         String::NewSymbol("color"),
         String::NewSymbol("count"),
         String::NewSymbol("r"),
@@ -129,7 +129,7 @@ void MinDiffer::calculate(vector<thmclrx::ColorCount*>* colors)
 {
     HandleScope scope;
 
-    static Local<String> _ColorParamKeys[] = {
+    Local<String> _ColorParamKeys[] = {
         String::NewSymbol("color"),
         String::NewSymbol("count"),
         String::NewSymbol("r"),
@@ -181,6 +181,7 @@ void MinDiffer::calculate(vector<thmclrx::ColorCount*>* colors)
             }
         }
 
+        if(-1 == mindiffidx) continue;
         colors->at(mindiffidx)->count += _pixels->at(i).count;
     }
 

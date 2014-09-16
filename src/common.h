@@ -40,7 +40,7 @@ namespace thmclrx
             Clean();
         }
 
-        T* Create()
+        inline T* Create()
         {
             if(_pool.size())
             {
@@ -54,7 +54,7 @@ namespace thmclrx
             }
         }
 
-        void Clean()
+        inline void Clean()
         {
             T* t = NULL;
             while(_pool.size())
@@ -66,10 +66,15 @@ namespace thmclrx
             }
         }
 
-        void Recycle(T* t)
+        inline void Recycle(T* t)
         {
             memset(t, 0, sizeof(t));
             _pool.push_back(t);
+        }
+
+        inline int Count()
+        {
+            return _pool.size();
         }
     };
 

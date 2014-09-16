@@ -98,7 +98,7 @@ void Octree::addColor(OctreeNode* node, RGB* color, int level)
          */
         unsigned char r = (color->red >> (7 - level)) & 1;
         unsigned char g = (color->green >> (7 - level)) & 1;
-        unsigned char b = (color->blue >> (7 - level) & 1);
+        unsigned char b = (color->blue >> (7 - level)) & 1;
 
         int idx = (r << 2) + (g << 1) + b;
 

@@ -25,10 +25,6 @@
 using namespace std;
 using namespace v8;
 
-const Handle<String> symbolR = String::New("r");
-const Handle<String> symbolG = String::New("g");
-const Handle<String> symbolB = String::New("b");
-
 struct RGBWithCount
 {
     int count;
