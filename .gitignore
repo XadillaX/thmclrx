@@ -29,6 +29,7 @@ node_modules
 
 *.swp
 *.jpg
+*.png
 *.html
 
 .build
