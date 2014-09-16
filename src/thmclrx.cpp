@@ -117,7 +117,7 @@ Handle<Value> OctreeGet(const Arguments& args)
     thmclrx::RGB* pRGBs[pixelCount];
     for(int i = 0; i < pixelCount; i++)
     {
-        Local<Value> v = rgbArray->Get(i);
+       Local<Value> v = rgbArray->Get(i);
         if(!v->IsObject())
         {
             // recycle...
@@ -155,11 +155,13 @@ Handle<Value> OctreeGet(const Arguments& args)
 
     // translate vector to v8::Array
     Local<Array> result = Array::New(colorCount.size());
+    Local<String> colorSymbol = String::NewSymbol("color");
+    Local<String> countSymbol = String::NewSymbol("count");
     for(int i = 0; i < colorCount.size(); i++)
     {
         Local<Object> obj = Object::New();
-        obj->Set(String::NewSymbol("color"), String::NewSymbol(colorCount[i]->color));
-        obj->Set(String::NewSymbol("count"), Integer::New(colorCount[i]->count));
+        obj->Set(colorSymbol, String::NewSymbol(colorCount[i]->color));
+        obj->Set(countSymbol, Integer::New(colorCount[i]->count));
 
         result->Set(i, obj);
     }

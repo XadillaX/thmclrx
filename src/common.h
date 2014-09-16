@@ -19,6 +19,7 @@
 #define __COMMON_H__
 
 #include <v8.h>
+#include <queue>
 #include <cstring>
 #include <node.h>
 #include <vector>
@@ -32,7 +33,7 @@ namespace thmclrx
     class TCX_MemoryPool
     {
     private:
-        list<T*>    _pool;
+        queue<T*>    _pool;
 
     public:
         ~TCX_MemoryPool()
@@ -42,10 +43,10 @@ namespace thmclrx
 
         inline T* Create()
         {
-            if(_pool.size())
+            if(!_pool.empty())
             {
                 T* t = _pool.front();
-                _pool.pop_front();
+                _pool.pop();
                 return t;
             }
             else
@@ -57,10 +58,10 @@ namespace thmclrx
         inline void Clean()
         {
             T* t = NULL;
-            while(_pool.size())
+            while(!_pool.empty())
             {
                 t = _pool.front();
-                _pool.pop_front();
+                _pool.pop();
 
                 delete t;
             }
@@ -69,7 +70,7 @@ namespace thmclrx
         inline void Recycle(T* t)
         {
             memset(t, 0, sizeof(t));
-            _pool.push_back(t);
+            _pool.push(t);
         }
 
         inline int Count()

@@ -8,43 +8,32 @@ var sugar = require("sugar");
 var thmclrx = require("../");
 var fs = require("fs");
 
-//thmclrx.octreeGet("pic.jpg", 8, function(err, result) {
-//    if(err) {
-//        return console.log(err.message);
-//    }
-//
-//    var string = "";
-//    for(var i = 0; i < result.length; i++) {
-//        string += "<div style=\"width: 50px; height: 21px; float: left; margin-right: 5px; margin-bottom: 5px; background: #"
-//            + result[i].color + "; color: #fff; font-size: 12px; text-align: center; padding-top: 9px;\">" + result[i].count + "</div>";
-//    }
-//
-//    fs.writeFileSync("test1.html", string, "utf8");
-//    console.log("done.");
-//});
+thmclrx.octreeGet("pic.jpg", 8, function(err, result) {
+    if(err) {
+        return console.log(err.message);
+    }
 
-var rgb = [];
-for(var i = 0; i < 35500; i++) {
-    rgb.push({
-        r   : Number.random(0, 255),
-        g   : Number.random(0, 255),
-        b   : Number.random(0, 255)
-    });
-}
-var result = thmclrx.cpp.mindifferGet(rgb);
-console.log(result);
+    var string = "";
+    for(var i = 0; i < result.length; i++) {
+        string += "<div style=\"width: 50px; height: 21px; float: left; margin-right: 5px; margin-bottom: 5px; background: #"
+            + result[i].color + "; color: #fff; font-size: 12px; text-align: center; padding-top: 9px;\">" + result[i].count + "</div>";
+    }
 
-//thmclrx.mindiffGet("pic.jpg", function(err, result) {
-//     if(err) {
-//        return console.log(err.message);
-//    }
-//
-//    var string = "";
-//    for(var i = 0; i < result.length; i++) {
-//        string += "<div style=\"width: 50px; height: 21px; float: left; margin-right: 5px; margin-bottom: 5px; background: #"
-//            + result[i].color + "; color: #fff; font-size: 12px; text-align: center; padding-top: 9px;\">" + result[i].count + "</div>";
-//    }
-//
-//    fs.writeFileSync("test2.html", string, "utf8");
-//    console.log("done 2.");
-//});
+    fs.writeFileSync("test1.html", string, "utf8");
+    console.log("done.");
+});
+
+thmclrx.mindiffGet("pic.jpg", function(err, result) {
+     if(err) {
+        return console.log(err.message);
+    }
+
+    var string = "";
+    for(var i = 0; i < result.length; i++) {
+        string += "<div style=\"width: 50px; height: 21px; float: left; margin-right: 5px; margin-bottom: 5px; background: #"
+            + result[i].color + "; color: #fff; font-size: 12px; text-align: center; padding-top: 9px;\">" + result[i].count + "</div>";
+    }
+
+    fs.writeFileSync("test2.html", string, "utf8");
+    console.log("done 2.");
+});
