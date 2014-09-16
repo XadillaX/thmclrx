@@ -32,4 +32,4 @@ node_modules
 *.html
 
 .build
-
+src/.ycm_*
