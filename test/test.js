@@ -51,4 +51,6 @@ thmclrx.mixGet("pic.jpg", 16, function(err, result) {
 
     fs.writeFileSync("test3.html", string, "utf8");
     console.log("done 3.");
+
+    thmclrx.cleanPool();
 });
