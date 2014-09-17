@@ -114,7 +114,7 @@ thmclrx.clearPool();
 
 > Normally, you do not need to call it.
 
-Contribute
+## Contribute
 
 You're welcome to fork and pull requests!
 
