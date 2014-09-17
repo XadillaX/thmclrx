@@ -1,0 +1,42 @@
+{
+  "name": "thmclrx",
+  "version": "0.0.5",
+  "description": "A theme color extractor module for Node.js.",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "get-pixels": "~1.1.3",
+    "pixel-getter": "~0.0.1",
+    "sugar": "~1.4.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "node test/test.js",
+    "install": "node-gyp rebuild"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/XadillaX/thmclrx.git"
+  },
+  "keywords": [
+    "theme color",
+    "color",
+    "image",
+    "jpg",
+    "png",
+    "gif",
+    "octree",
+    "extractor",
+    "color extractor",
+    "pixel"
+  ],
+  "author": "XadillaX",
+  "license": "GPLv2",
+  "gypfile": true,
+  "bugs": {
+    "url": "https://github.com/XadillaX/thmclrx/issues"
+  },
+  "homepage": "https://github.com/XadillaX/thmclrx"
+}
