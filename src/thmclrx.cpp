@@ -114,7 +114,7 @@ Handle<Value> OctreeGet(const Arguments& args)
 
     // refer to: http://deadhorse.me/nodejs/2012/10/09/c_addon_in_nodejs_object.html
     int pixelCount = rgbArray->Length();
-    thmclrx::RGB* pRGBs[pixelCount];
+    thmclrx::RGB** pRGBs = new thmclrx::RGB*[pixelCount]; //[pixelCount];
     for(int i = 0; i < pixelCount; i++)
     {
        Local<Value> v = rgbArray->Get(i);
@@ -169,6 +169,7 @@ Handle<Value> OctreeGet(const Arguments& args)
     // recycle...
     Octree::recycleColorCount(&colorCount);
     thmclrx::RGB::recycleArray(pRGBs, pixelCount);
+    delete []pRGBs;
 
     return scope.Close(result);
 }
