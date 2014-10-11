@@ -108,7 +108,7 @@ var colors = thmclrx.mindifferGet(pixels, [palette]);
 Clean memory pool.
 
 ```javascript
-var thmclrx = require("thmclrx");
+var thmclrx = require("thmclrx/build/Release/thmclrx.node");
 thmclrx.clearPool();
 ```
 

@@ -8,7 +8,7 @@ var sugar = require("sugar");
 var thmclrx = require("../");
 var fs = require("fs");
 
-thmclrx.octreeGet("pic.jpg", 8, function(err, result) {
+thmclrx.octreeGet("pic.jpg", 16, function(err, result) {
     if(err) {
         return console.log(err.message);
     }
@@ -22,7 +22,7 @@ thmclrx.octreeGet("pic.jpg", 8, function(err, result) {
     fs.writeFileSync("test1.html", string, "utf8");
     console.log("done.");
 });
-
+return;
 thmclrx.mindiffGet("pic.jpg", function(err, result) {
      if(err) {
         return console.log(err.message);
@@ -38,7 +38,7 @@ thmclrx.mindiffGet("pic.jpg", function(err, result) {
     console.log("done 2.");
 });
 
-thmclrx.mixGet("pic.jpg", 16, function(err, result) {
+thmclrx.mixGet("pic.jpg", 32, function(err, result) {
     if(err) {
         return console.log(err.message);
     }

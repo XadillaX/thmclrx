@@ -20,10 +20,9 @@
 using namespace std;
 using namespace thmclrx;
 
-inline int abs(int a, int b)
+inline int diff_square(int a, int b)
 {
-    int c = a - b;
-    return c < 0 ? -c : c;
+    return (a - b) * (a - b);
 }
 
 bool MinDiffer::TransformColorParam(Local<Value> param, vector<RGBWithCount>* rgb)
@@ -162,9 +161,9 @@ void MinDiffer::calculate(vector<thmclrx::ColorCount*>* colors)
 
         for(int j = 0; j < colors->size(); j++)
         {
-            diffr = abs(_pixels->at(i).rgb->red, colors->at(j)->red);
-            diffg = abs(_pixels->at(i).rgb->green, colors->at(j)->green);
-            diffb = abs(_pixels->at(i).rgb->blue, colors->at(j)->blue);
+            diffr = diff_square(_pixels->at(i).rgb->red, colors->at(j)->red);
+            diffg = diff_square(_pixels->at(i).rgb->green, colors->at(j)->green);
+            diffb = diff_square(_pixels->at(i).rgb->blue, colors->at(j)->blue);
             diff = diffr + diffg + diffb;
 
             if(mindiffidx == -1)
