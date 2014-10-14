@@ -168,13 +168,13 @@ void MinDiffer::calculate(vector<thmclrx::ColorCount*>* colors)
 
         rgb = _pixels->at(i);
 
-        if(abs(rgb.rgb->red - rgb.rgb->green) <= 5 && abs(rgb.rgb->red - rgb.rgb->green) <= 5 && abs(rgb.rgb->green - rgb.rgb->blue) <= 5)
+        if(abs(rgb.rgb->red - rgb.rgb->green) <= 5 && abs(rgb.rgb->red - rgb.rgb->blue) <= 5 && abs(rgb.rgb->green - rgb.rgb->blue) <= 5)
         {
             for(int j = 0; j < grayColors.size(); j++)
             {
-                diffr = diff_square(rgb.rgb->red, colors->at(j)->red);
-                diffg = diff_square(rgb.rgb->green, colors->at(j)->green);
-                diffb = diff_square(rgb.rgb->blue, colors->at(j)->blue);
+                diffr = diff_square(rgb.rgb->red, grayColors.at(j)->red);
+                diffg = diff_square(rgb.rgb->green, grayColors.at(j)->green);
+                diffb = diff_square(rgb.rgb->blue, grayColors.at(j)->blue);
                 diff = diffr + diffg + diffb;
 
                 if(mindiffidx == -1)
