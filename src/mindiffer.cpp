@@ -168,7 +168,7 @@ void MinDiffer::calculate(vector<thmclrx::ColorCount*>* colors)
 
         rgb = _pixels->at(i);
 
-        if(abs(rgb.rgb->red - rgb.rgb->green) < 2 && abs(rgb.rgb->red - rgb.rgb->green) < 2 && abs(rgb.rgb->green - rgb.rgb->blue) < 2)
+        if(abs(rgb.rgb->red - rgb.rgb->green) <= 5 && abs(rgb.rgb->red - rgb.rgb->green) <= 5 && abs(rgb.rgb->green - rgb.rgb->blue) <= 5)
         {
             for(int j = 0; j < grayColors.size(); j++)
             {
