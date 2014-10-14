@@ -216,10 +216,10 @@ void MinDiffer::calculate(vector<thmclrx::ColorCount*>* colors)
                     mindiffidx = j;
                 }
             }
+
+            if(-1 == mindiffidx) continue;
+            colors->at(mindiffidx)->count += rgb.count;
         }
-        
-        if(-1 == mindiffidx) continue;
-        colors->at(mindiffidx)->count += rgb.count;
     }
 
     // add gray colors to colors
