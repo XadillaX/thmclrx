@@ -23,7 +23,7 @@ using namespace thmclrx;
 
 inline int diff_square(int a, int b)
 {
-    return (a - b) * (a - b);
+    return abs(a - b);//(a - b) * (a - b);
 }
 
 bool MinDiffer::TransformColorParam(Local<Value> param, vector<RGBWithCount>* rgb)
