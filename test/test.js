@@ -8,7 +8,7 @@ var sugar = require("sugar");
 var thmclrx = require("../");
 var fs = require("fs");
 
-thmclrx.octreeGet("pic.jpg", 11, function(err, result) {
+thmclrx.octreeGet("pic.jpg", 32, function(err, result) {
     if(err) {
         return console.log(err.message);
     }
@@ -38,7 +38,7 @@ thmclrx.mindiffGet("pic.jpg", function(err, result) {
     console.log("done 2.");
 });
 
-thmclrx.mixGet("pic.jpg", 8, function(err, result) {
+thmclrx.mixGet("pic.jpg", 32, function(err, result) {
     if(err) {
         return console.log(err.message);
     }

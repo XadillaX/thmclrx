@@ -17,6 +17,7 @@
  */
 #include "mindiffer.h"
 #include <algorithm>
+#include <cmath>
 using namespace std;
 using namespace thmclrx;
 
@@ -128,6 +129,9 @@ void MinDiffer::calculate(vector<thmclrx::ColorCount*>* colors)
 {
     HandleScope scope;
 
+    // Gray colors
+    vector<thmclrx::ColorCount*> grayColors;
+
     Local<String> _ColorParamKeys[] = {
         String::NewSymbol("color"),
         String::NewSymbol("count"),
@@ -147,49 +151,92 @@ void MinDiffer::calculate(vector<thmclrx::ColorCount*>* colors)
         cnt->colorValue = (_palette->at(i).red << 16) + (_palette->at(i).green << 8) + _palette->at(i).blue;
         sprintf(cnt->color, "%.2X%.2X%.2X", cnt->red, cnt->green, cnt->blue);
 
-        colors->push_back(cnt);
+        // whether it's gray / white / black
+        if(cnt->red == cnt->green && cnt->red == cnt->blue) grayColors.push_back(cnt);
+        else colors->push_back(cnt);
     }
 
     // calculate
     int diffr, diffg, diffb, diff;
     int mindiff, mindiffidx;
+    RGBWithCount rgb;
 
     for(int i = 0; i < _pixels->size(); i++)
     {
         mindiff = 0;
         mindiffidx = -1;
 
-        for(int j = 0; j < colors->size(); j++)
-        {
-            diffr = diff_square(_pixels->at(i).rgb->red, colors->at(j)->red);
-            diffg = diff_square(_pixels->at(i).rgb->green, colors->at(j)->green);
-            diffb = diff_square(_pixels->at(i).rgb->blue, colors->at(j)->blue);
-            diff = diffr + diffg + diffb;
+        rgb = _pixels->at(i);
 
-            if(mindiffidx == -1)
+        if(abs(rgb.rgb->red - rgb.rgb->green) < 2 && abs(rgb.rgb->red - rgb.rgb->green) < 2 && abs(rgb.rgb->green - rgb.rgb->blue) < 2)
+        {
+            for(int j = 0; j < grayColors.size(); j++)
             {
-                mindiff = diff;
-                mindiffidx = j;
-                continue;
+                diffr = diff_square(rgb.rgb->red, colors->at(j)->red);
+                diffg = diff_square(rgb.rgb->green, colors->at(j)->green);
+                diffb = diff_square(rgb.rgb->blue, colors->at(j)->blue);
+                diff = diffr + diffg + diffb;
+
+                if(mindiffidx == -1)
+                {
+                    mindiff = diff;
+                    mindiffidx = j;
+                    continue;
+                }
+
+                if(diff < mindiff)
+                {
+                    mindiff = diff;
+                    mindiffidx = j;
+                }
             }
 
-            if(diff < mindiff)
+            if(-1 == mindiffidx) continue;
+            grayColors[mindiffidx]->count += rgb.count;
+        }
+        else
+        {
+            for(int j = 0; j < colors->size(); j++)
             {
-                mindiff = diff;
-                mindiffidx = j;
+                diffr = diff_square(rgb.rgb->red, colors->at(j)->red);
+                diffg = diff_square(rgb.rgb->green, colors->at(j)->green);
+                diffb = diff_square(rgb.rgb->blue, colors->at(j)->blue);
+                diff = diffr + diffg + diffb;
+    
+                if(mindiffidx == -1)
+                {
+                    mindiff = diff;
+                    mindiffidx = j;
+                    continue;
+                }
+    
+                if(diff < mindiff)
+                {
+                    mindiff = diff;
+                    mindiffidx = j;
+                }
             }
         }
-
+        
         if(-1 == mindiffidx) continue;
-        colors->at(mindiffidx)->count += _pixels->at(i).count;
+        colors->at(mindiffidx)->count += rgb.count;
+    }
+
+    // add gray colors to colors
+    for(int i = 0; i < grayColors.size(); i++)
+    {
+        colors->push_back(grayColors[i]);
     }
 
     // sort
     sort(colors->begin(), colors->end(), thmclrx::ColorCount::cmp);
 
     // delete useless ones..
+    thmclrx::ColorCount* pCC;
     while(colors->size() && !colors->at(colors->size() - 1)->count)
     {
+        pCC = colors->at(colors->size() - 1);
+        g_PoolColorCount.Recycle(pCC);
         colors->pop_back();
     }
 
