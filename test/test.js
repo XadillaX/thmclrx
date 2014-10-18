@@ -38,7 +38,7 @@ thmclrx.mindiffGet("pic.jpg", function(err, result) {
     console.log("done 2.");
 });
 
-thmclrx.mixGet("pic.jpg", 32, function(err, result) {
+thmclrx.mixGet("http://img.hb.aicdn.com/a4bdcf094ff649f7df75ec2bb7c3f3bba5ad53631e9f42-CHoVqn_fw658", 32, function(err, result) {
     if(err) {
         return console.log(err.message);
     }
