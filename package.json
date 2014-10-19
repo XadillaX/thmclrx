@@ -1,13 +1,13 @@
 {
   "name": "thmclrx",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "A theme color extractor module for Node.js.",
   "main": "index.js",
   "directories": {
     "test": "test"
   },
   "dependencies": {
-    "pixel-getter": "~0.0.2",
+    "pixel-getter": "~0.0.3",
     "sugar": "~1.4.1"
   },
   "devDependencies": {},
