@@ -1,5 +1,7 @@
 # ThmclrX
 
+![thmclrx](http://img.shields.io/npm/v/thmclrx.svg) ![thmclrx](http://img.shields.io/npm/dm/thmclrx.svg)
+
 A theme color extractor module for Node.js.
 
 ## Algorithm
