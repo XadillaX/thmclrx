@@ -19,6 +19,8 @@ $ npm install thmclrx
 
 There only three API in node.js now.
 
+> After version 0.2.0, we use a new [memory pool](https://github.com/XadillaX/xmempool/tree/b06351836c9b51952a3d98c438df6626dda8738c) for thmclrx.
+
 ### octreeGet
 
 `octreeGet` is to get the theme colors in an octree. The colors are unsertain but fidelity.
