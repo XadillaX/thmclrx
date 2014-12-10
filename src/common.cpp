@@ -311,7 +311,7 @@ namespace thmclrx
 
         Local<Array> array = Local<Array>::Cast(value);
 
-        for(int i = 0; i < array->Length(); i++)
+        for(unsigned int i = 0; i < array->Length(); i++)
         {
             if(!array->Get(i)->IsObject())
             {

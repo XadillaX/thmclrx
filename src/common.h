@@ -24,6 +24,7 @@
 #include <node.h>
 #include <vector>
 #include <list>
+#include "third-party/xmempool/xmempool.h"
 using namespace std;
 using namespace v8;
 
@@ -33,49 +34,44 @@ namespace thmclrx
     class TCX_MemoryPool
     {
     private:
-        queue<T*>    _pool;
+        xmem_pool_handle    _pool;
+
+        void _GeneratePool()
+        {
+            if(!_pool) _pool = xmem_create_pool(sizeof(T));
+        }
 
     public:
+        TCX_MemoryPool() :
+            _pool(0)
+        {
+        }
+
         ~TCX_MemoryPool()
         {
-            Clean();
+            if(_pool)
+            {
+                xmem_destroy_pool(_pool);
+            }
         }
 
         inline T* Create()
         {
-            if(!_pool.empty())
-            {
-                T* t = _pool.front();
-                _pool.pop();
-                return t;
-            }
-            else
-            {
-                return new T();
-            }
+            _GeneratePool();
+            return (T*)xmem_alloc(_pool);
         }
 
         inline void Clean()
         {
-            T* t = NULL;
-            while(!_pool.empty())
-            {
-                t = _pool.front();
-                _pool.pop();
-
-                delete t;
-            }
+            if(!_pool) return;
+            xmem_destroy_pool(_pool);
+            _pool = 0;
         }
 
         inline void Recycle(T* t)
         {
-            memset(t, 0, sizeof(t));
-            _pool.push(t);
-        }
-
-        inline int Count()
-        {
-            return _pool.size();
+            _GeneratePool();
+            xmem_free(_pool, t);
         }
     };
 
