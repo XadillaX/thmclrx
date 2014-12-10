@@ -38,7 +38,7 @@ Handle<Value> MindifferGet(const Arguments& args)
     // tranform color param
     if(!MinDiffer::TransformColorParam(_rgbArray, &rgbArray))
     {
-        for(int i = 0; i < rgbArray.size(); i++)
+        for(unsigned int i = 0; i < rgbArray.size(); i++)
         {
             g_PoolRGB.Recycle(rgbArray[i].rgb);
         }
@@ -65,7 +65,7 @@ Handle<Value> MindifferGet(const Arguments& args)
 
     // translate vector to v8::Array
     Local<Array> result = Array::New(colorCount.size());
-    for(int i = 0; i < colorCount.size(); i++)
+    for(unsigned int i = 0; i < colorCount.size(); i++)
     {
         Local<Object> obj = Object::New();
         obj->Set(String::NewSymbol("color"), String::NewSymbol(colorCount[i]->color));
@@ -75,7 +75,7 @@ Handle<Value> MindifferGet(const Arguments& args)
     }
 
     // recycle something
-    for(int i = 0; i < rgbArray.size(); i++)
+    for(unsigned int i = 0; i < rgbArray.size(); i++)
     {
         g_PoolRGB.Recycle(rgbArray[i].rgb);
     }
@@ -157,7 +157,7 @@ Handle<Value> OctreeGet(const Arguments& args)
     Local<Array> result = Array::New(colorCount.size());
     Local<String> colorSymbol = String::NewSymbol("color");
     Local<String> countSymbol = String::NewSymbol("count");
-    for(int i = 0; i < colorCount.size(); i++)
+    for(unsigned int i = 0; i < colorCount.size(); i++)
     {
         Local<Object> obj = Object::New();
         obj->Set(colorSymbol, String::NewSymbol(colorCount[i]->color));

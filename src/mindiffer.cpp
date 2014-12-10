@@ -140,7 +140,7 @@ void MinDiffer::calculate(vector<thmclrx::ColorCount*>* colors)
         String::NewSymbol("b")
     };
 
-    for(int i = 0; i < _palette->size(); i++)
+    for(unsigned int i = 0; i < _palette->size(); i++)
     {
         thmclrx::ColorCount* cnt = thmclrx::g_PoolColorCount.Create();
 
@@ -161,7 +161,7 @@ void MinDiffer::calculate(vector<thmclrx::ColorCount*>* colors)
     int mindiff, mindiffidx;
     RGBWithCount rgb;
 
-    for(int i = 0; i < _pixels->size(); i++)
+    for(unsigned int i = 0; i < _pixels->size(); i++)
     {
         mindiff = 0;
         mindiffidx = -1;
@@ -170,7 +170,7 @@ void MinDiffer::calculate(vector<thmclrx::ColorCount*>* colors)
 
         if(abs(rgb.rgb->red - rgb.rgb->green) <= 5 && abs(rgb.rgb->red - rgb.rgb->blue) <= 5 && abs(rgb.rgb->green - rgb.rgb->blue) <= 5)
         {
-            for(int j = 0; j < grayColors.size(); j++)
+            for(unsigned int j = 0; j < grayColors.size(); j++)
             {
                 diffr = diff_square(rgb.rgb->red, grayColors.at(j)->red);
                 diffg = diff_square(rgb.rgb->green, grayColors.at(j)->green);
@@ -196,7 +196,7 @@ void MinDiffer::calculate(vector<thmclrx::ColorCount*>* colors)
         }
         else
         {
-            for(int j = 0; j < colors->size(); j++)
+            for(unsigned int j = 0; j < colors->size(); j++)
             {
                 diffr = diff_square(rgb.rgb->red, colors->at(j)->red);
                 diffg = diff_square(rgb.rgb->green, colors->at(j)->green);
@@ -223,7 +223,7 @@ void MinDiffer::calculate(vector<thmclrx::ColorCount*>* colors)
     }
 
     // add gray colors to colors
-    for(int i = 0; i < grayColors.size(); i++)
+    for(unsigned int i = 0; i < grayColors.size(); i++)
     {
         colors->push_back(grayColors[i]);
     }
