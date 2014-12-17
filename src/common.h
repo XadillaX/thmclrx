@@ -71,7 +71,7 @@ namespace thmclrx
         inline void Recycle(T* t)
         {
             _GeneratePool();
-            xmem_free(_pool, t);
+            xmem_free(_pool, (char*)t);
         }
     };
 
