@@ -2,7 +2,7 @@
 
 [![thmclrx](http://img.shields.io/npm/v/thmclrx.svg)](https://www.npmjs.org/package/thmclrx) [![thmclrx](http://img.shields.io/npm/dm/thmclrx.svg)](https://www.npmjs.org/package/thmclrx)
 
-A theme color extractor module for Node.js.
+A theme color extractor module for Node.js with ❤.
 
 ## Algorithm
 
