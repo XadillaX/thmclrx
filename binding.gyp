@@ -17,6 +17,9 @@
                 "./src/octree.cpp",
                 "./src/mindiffer.cpp",
                 "./src/common.cpp"
+            ],
+            "include_dirs": [
+                "<!(node -e \"require('nan')\")"
             ]
         }
     ]
