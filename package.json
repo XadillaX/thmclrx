@@ -1,14 +1,15 @@
 {
   "name": "thmclrx",
-  "version": "0.2.6",
+  "version": "0.3.0",
   "description": "A theme color extractor module for Node.js.",
   "main": "index.js",
   "directories": {
     "test": "test"
   },
   "dependencies": {
-    "pixel-getter": "~0.0.5",
-    "sugar": "~1.4.1"
+    "nan": "^1.5.1",
+    "pixel-getter": "^0.0.5",
+    "sugar": "^1.4.1"
   },
   "devDependencies": {},
   "scripts": {
@@ -39,4 +40,3 @@
   },
   "homepage": "https://github.com/XadillaX/thmclrx"
 }
-
