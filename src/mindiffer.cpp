@@ -16,8 +16,10 @@
  * =====================================================================================
  */
 #include "mindiffer.h"
+#include <string.h>
 #include <algorithm>
 #include <cmath>
+#include <nan.h>
 using namespace std;
 using namespace thmclrx;
 
@@ -28,20 +30,19 @@ inline int diff_square(int a, int b)
 
 bool MinDiffer::TransformColorParam(Local<Value> param, vector<RGBWithCount>* rgb)
 {
-    HandleScope scope;
+    NanScope();
 
     Local<String> _ColorParamKeys[] = {
-        String::NewSymbol("color"),
-        String::NewSymbol("count"),
-        String::NewSymbol("r"),
-        String::NewSymbol("g"),
-        String::NewSymbol("b")
+        NanNew<String>("color"),
+        NanNew<String>("count"),
+        NanNew<String>("r"),
+        NanNew<String>("g"),
+        NanNew<String>("b")
     };
 
     if(!param->IsArray())
     {
-        ThrowException(Exception::TypeError(String::New("The first argument should be an array.")));
-        scope.Close(Undefined());
+        NanThrowTypeError("The first argument should be an array.");
         return false;
     }
 
@@ -53,8 +54,7 @@ bool MinDiffer::TransformColorParam(Local<Value> param, vector<RGBWithCount>* rg
     {
         if(!array->Get(i)->IsObject())
         {
-            ThrowException(Exception::TypeError(String::New("Elements in first argument must be objects.")));
-            scope.Close(Undefined());
+            NanThrowTypeError("Elements in first argument must be objects.");
             return false;
         }
 
@@ -64,7 +64,7 @@ bool MinDiffer::TransformColorParam(Local<Value> param, vector<RGBWithCount>* rg
                 obj->Get(_ColorParamKeys[1])->IsInt32() &&
                 Local<String>::Cast(obj->Get(_ColorParamKeys[0]))->Length() >= 6)
         {
-            Local<String>::Cast(obj->Get(_ColorParamKeys[0]))->WriteAscii(colorStr, 0, 6);
+            strcpy(colorStr, **(new NanAsciiString(obj->Get(_ColorParamKeys[0]))));
 
             // is all [0123456789ABCDEF]
             for(int j = 0; j < 6; j++)
@@ -73,8 +73,7 @@ bool MinDiffer::TransformColorParam(Local<Value> param, vector<RGBWithCount>* rg
                         !(colorStr[j] >= 'A' && colorStr[j] <= 'F') &&
                         !(colorStr[j] >= 'a' && colorStr[j] <= 'f'))
                 {
-                    ThrowException(Exception::TypeError(String::New("Wrong argument in color pixel array 1.")));
-                    scope.Close(Undefined());
+                    NanThrowTypeError("Wrong argument in color pixel array 1.");
                     return false;
                 }
             }
@@ -109,13 +108,11 @@ bool MinDiffer::TransformColorParam(Local<Value> param, vector<RGBWithCount>* rg
         }
         else
         {
-            ThrowException(Exception::TypeError(String::New("Wrong argument in color pixel array 2.")));
-            scope.Close(Undefined());
+            NanThrowTypeError("Wrong argument in color pixel array 2.");
             return false;
         }
     }
 
-    scope.Close(Undefined());
     return true;
 }
 
@@ -127,17 +124,17 @@ MinDiffer::MinDiffer(vector<RGBWithCount>* pixels, vector<Palette>* palette) :
 
 void MinDiffer::calculate(vector<thmclrx::ColorCount*>* colors)
 {
-    HandleScope scope;
+    NanScope();
 
     // Gray colors
     vector<thmclrx::ColorCount*> grayColors;
 
     Local<String> _ColorParamKeys[] = {
-        String::NewSymbol("color"),
-        String::NewSymbol("count"),
-        String::NewSymbol("r"),
-        String::NewSymbol("g"),
-        String::NewSymbol("b")
+        NanNew<String>("color"),
+        NanNew<String>("count"),
+        NanNew<String>("r"),
+        NanNew<String>("g"),
+        NanNew<String>("b")
     };
 
     for(unsigned int i = 0; i < _palette->size(); i++)
@@ -239,7 +236,5 @@ void MinDiffer::calculate(vector<thmclrx::ColorCount*>* colors)
         g_PoolColorCount.Recycle(pCC);
         colors->pop_back();
     }
-
-    scope.Close(Undefined());
 }
 

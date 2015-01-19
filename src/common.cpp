@@ -18,6 +18,7 @@
 #include <vector>
 using namespace std;
 
+#include <nan.h>
 #include "common.h"
 #include "mindiffer.h"
 
@@ -296,16 +297,15 @@ namespace thmclrx
 
     void Palette::V8ToPalette(Local<Value> value, vector<Palette>* palette)
     {
-        HandleScope scope;
+        NanScope();
 
-        Local<String> symbolR = String::New("r");
-        Local<String> symbolG = String::New("g");
-        Local<String> symbolB = String::New("b");
+        Local<String> symbolR = NanNew<String>("r");
+        Local<String> symbolG = NanNew<String>("g");
+        Local<String> symbolB = NanNew<String>("b");
 
         if(!value->IsArray())
         {
             GetDefaultPalette(palette);
-            scope.Close(Undefined());
             return;
         }
 
@@ -316,7 +316,6 @@ namespace thmclrx
             if(!array->Get(i)->IsObject())
             {
                 GetDefaultPalette(palette);
-                scope.Close(Undefined());
                 return;
             }
 
@@ -324,7 +323,6 @@ namespace thmclrx
             if(!obj->Get(symbolR)->IsInt32() || !obj->Get(symbolG)->IsInt32() || !obj->Get(symbolB)->IsInt32())
             {
                 GetDefaultPalette(palette);
-                scope.Close(Undefined());
                 return;
             }
 
@@ -332,7 +330,6 @@ namespace thmclrx
             palette->push_back(p);
         }
 
-        scope.Close(Undefined());
         return;
     }
 };

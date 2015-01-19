@@ -17,19 +17,21 @@
  */
 #include <node.h>
 #include <v8.h>
+#include <nan.h>
 #include <vector>
 #include "octree.h"
 #include "mindiffer.h"
 using namespace std;
+using namespace v8;
 
-Handle<Value> MindifferGet(const Arguments& args)
+NAN_METHOD(MindifferGet)
 {
-    HandleScope scope;
+    NanScope();
 
     if(args.Length() < 1)
     {
-        ThrowException(Exception::TypeError(String::New("Wrong number of arguments.")));
-        return scope.Close(Undefined());
+        NanThrowError("Wrong number of arguments.");
+        NanReturnUndefined();
     }
 
     Local<Value> _rgbArray = args[0];
@@ -45,7 +47,7 @@ Handle<Value> MindifferGet(const Arguments& args)
 
         rgbArray.clear();
 
-        return scope.Close(Undefined());
+        NanReturnUndefined();
     }
 
     // color palette
@@ -64,13 +66,12 @@ Handle<Value> MindifferGet(const Arguments& args)
     mindiffer.calculate(&colorCount);
 
     // translate vector to v8::Array
-    Local<Array> result = Array::New(colorCount.size());
+    Local<Array> result = NanNew<Array>(colorCount.size());
     for(unsigned int i = 0; i < colorCount.size(); i++)
     {
-        Local<Object> obj = Object::New();
-        obj->Set(String::NewSymbol("color"), String::NewSymbol(colorCount[i]->color));
-        obj->Set(String::NewSymbol("count"), Integer::New(colorCount[i]->count));
-
+        Local<Object> obj = NanNew<Object>();
+        obj->Set(NanNew<String>("color"), NanNew<String>(colorCount[i]->color));
+        obj->Set(NanNew<String>("count"), NanNew<Integer>(colorCount[i]->count));
         result->Set(i, obj);
     }
 
@@ -82,25 +83,25 @@ Handle<Value> MindifferGet(const Arguments& args)
     rgbArray.clear();
     Octree::recycleColorCount(&colorCount);
 
-    return scope.Close(result);
+    NanReturnValue(result);
 }
 
-Handle<Value> OctreeGet(const Arguments& args)
+NAN_METHOD(OctreeGet)
 {
-    HandleScope scope;
+    NanScope();
 
     if(args.Length() < 1)
     {
-        ThrowException(Exception::TypeError(String::New("Wrong number of arguments.")));
-        return scope.Close(Undefined());
+        NanThrowError("Wrong number of arguments.");
+        NanReturnUndefined();
     }
 
     // Needs one argument - RGB Object Array
     Local<Value> _rgbArray = args[0];
     if(!_rgbArray->IsArray()) 
     {
-        ThrowException(Exception::TypeError(String::New("Argument should be an array.")));
-        return scope.Close(Undefined());
+        NanThrowTypeError("Arguments should be an array.");
+        NanReturnUndefined();
     }
 
     // max colors
@@ -123,24 +124,24 @@ Handle<Value> OctreeGet(const Arguments& args)
             // recycle...
             thmclrx::RGB::recycleArray(pRGBs, i - 1);
 
-            ThrowException(Exception::TypeError(String::New("Pixel array is not all objects.")));
-            return scope.Close(Undefined());
+            NanThrowTypeError("Pixel array is not all objects.");
+            NanReturnUndefined();
         }
 
         Local<Object> preRGB = rgbArray->Get(i)->ToObject();
-        if(!preRGB->Get(String::NewSymbol("r"))->IsInt32() ||
-                !preRGB->Get(String::NewSymbol("g"))->IsInt32() ||
-                !preRGB->Get(String::NewSymbol("b"))->IsInt32())
+        if(!preRGB->Get(NanNew<String>("r"))->IsInt32() ||
+                !preRGB->Get(NanNew<String>("g"))->IsInt32() ||
+                !preRGB->Get(NanNew<String>("b"))->IsInt32())
         {
             thmclrx::RGB::recycleArray(pRGBs, i - 1);
-            ThrowException(Exception::TypeError(String::New("Pixel array's elements must contains r, g and b.")));
-            return scope.Close(Undefined());
+            NanThrowTypeError("Pixel array's elements must contains r, g and b.");
+            NanReturnUndefined();
         }
 
         thmclrx::RGB* tmp = g_PoolRGB.Create();
-        tmp->red = preRGB->Get(String::NewSymbol("r"))->ToInt32()->Value();
-        tmp->green = preRGB->Get(String::NewSymbol("g"))->ToInt32()->Value();
-        tmp->blue = preRGB->Get(String::NewSymbol("b"))->ToInt32()->Value();
+        tmp->red = preRGB->Get(NanNew<String>("r"))->ToInt32()->Value();
+        tmp->green = preRGB->Get(NanNew<String>("g"))->ToInt32()->Value();
+        tmp->blue = preRGB->Get(NanNew<String>("b"))->ToInt32()->Value();
 
         pRGBs[i] = tmp;
     }
@@ -154,14 +155,14 @@ Handle<Value> OctreeGet(const Arguments& args)
     tree.colorStats(tree.getRoot(), &colorCount);
 
     // translate vector to v8::Array
-    Local<Array> result = Array::New(colorCount.size());
-    Local<String> colorSymbol = String::NewSymbol("color");
-    Local<String> countSymbol = String::NewSymbol("count");
+    Local<Array> result = NanNew<Array>(colorCount.size());
+    Local<String> colorSymbol = NanNew<String>("color");
+    Local<String> countSymbol = NanNew<String>("count");
     for(unsigned int i = 0; i < colorCount.size(); i++)
     {
-        Local<Object> obj = Object::New();
-        obj->Set(colorSymbol, String::NewSymbol(colorCount[i]->color));
-        obj->Set(countSymbol, Integer::New(colorCount[i]->count));
+        Local<Object> obj = NanNew<Object>();
+        obj->Set(colorSymbol, NanNew<String>(colorCount[i]->color));
+        obj->Set(countSymbol, NanNew<Integer>(colorCount[i]->count));
 
         result->Set(i, obj);
     }
@@ -171,28 +172,28 @@ Handle<Value> OctreeGet(const Arguments& args)
     thmclrx::RGB::recycleArray(pRGBs, pixelCount);
     delete []pRGBs;
 
-    return scope.Close(result);
+    NanReturnValue(result);
 }
 
-Handle<Value> CleanPool(const Arguments& args)
+NAN_METHOD(CleanPool)
 {
-    HandleScope scope;
+    NanScope();
 
     g_PoolRGB.Clean();
     g_PoolColorCount.Clean();
     Octree::cleanPool();
 
-    return scope.Close(Undefined());
+    NanReturnUndefined();
 }
 
 void Init(Handle<Object> exports)
 {
-    exports->Set(String::NewSymbol("octreeGet"),
-            FunctionTemplate::New(OctreeGet)->GetFunction());
-    exports->Set(String::NewSymbol("mindifferGet"),
-            FunctionTemplate::New(MindifferGet)->GetFunction());
-    exports->Set(String::NewSymbol("cleanPool"),
-            FunctionTemplate::New(CleanPool)->GetFunction());
+    exports->Set(NanNew<String>("octreeGet"),
+            NanNew<FunctionTemplate>(OctreeGet)->GetFunction());
+    exports->Set(NanNew<String>("mindifferGet"),
+            NanNew<FunctionTemplate>(MindifferGet)->GetFunction());
+    exports->Set(NanNew<String>("cleanPool"),
+            NanNew<FunctionTemplate>(CleanPool)->GetFunction());
 }
 
 NODE_MODULE(thmclrx, Init);
