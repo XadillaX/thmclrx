@@ -37,3 +37,7 @@ src/.ycm_*
 
 .idea
 build
+.ropeproject
+
+.DS_Store
+
