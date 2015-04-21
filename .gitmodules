@@ -1,0 +1,3 @@
+[submodule "src/third-party/xmempool"]
+	path = src/third-party/xmempool
+	url = https://github.com/XadillaX/xmempool.git
