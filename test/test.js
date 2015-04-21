@@ -8,7 +8,7 @@ var sugar = require("sugar");
 var thmclrx = require("../");
 var fs = require("fs");
 
-thmclrx.octreeGet("pic.jpg", 32, function(err, result) {
+thmclrx.octreeGet(__dirname + "/pic.jpg", 32, function(err, result) {
     if(err) {
         return console.log(err.message);
     }
@@ -23,7 +23,7 @@ thmclrx.octreeGet("pic.jpg", 32, function(err, result) {
     console.log("done.");
 });
 
-thmclrx.mindiffGet("pic.jpg", function(err, result) {
+thmclrx.mindiffGet(__dirname + "/pic.jpg", function(err, result) {
      if(err) {
         return console.log(err.message);
     }

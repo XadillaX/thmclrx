@@ -15,12 +15,11 @@
  *
  * =====================================================================================
  */
-#include <vector>
-using namespace std;
-
 #include <nan.h>
 #include "common.h"
 #include "mindiffer.h"
+#include <vector>
+using namespace std;
 
 namespace thmclrx
 {
