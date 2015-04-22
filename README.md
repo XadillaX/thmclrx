@@ -6,7 +6,7 @@
 A theme color extractor module for Node.js with ❤.
 
 > Now **thmclrx** is supporting [Nodejs](http://nodejs.org/) `v0.11.*` and
-> [iojs](http://iojs.org/) `v1.*`!
+> [iojs](http://iojs.org/)!
 
 ## Algorithm
 
