@@ -1,6 +1,6 @@
 {
   "name": "thmclrx",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "A theme color extractor module for Node.js.",
   "main": "index.js",
   "directories": {
@@ -33,7 +33,7 @@
     "pixel"
   ],
   "author": "XadillaX",
-  "license": "GPLv2",
+  "license": "MIT",
   "gypfile": true,
   "bugs": {
     "url": "https://github.com/XadillaX/thmclrx/issues"
