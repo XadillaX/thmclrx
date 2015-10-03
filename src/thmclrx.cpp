@@ -15,25 +15,26 @@
  *
  * =====================================================================================
  */
-#include <v8.h>
 #include <nan.h>
 #include <vector>
 #include "octree.h"
 #include "mindiffer.h"
 using namespace std;
-using namespace v8;
+
+using Nan::Set;
+using Nan::GetFunction;
+using Nan::New;
+using v8::FunctionTemplate;
+using v8::String;
 
 NAN_METHOD(MindifferGet)
 {
-    NanScope();
-
-    if(args.Length() < 1)
+    if(info.Length() < 1)
     {
-        NanThrowError("Wrong number of arguments.");
-        NanReturnUndefined();
+        return Nan::ThrowError("Wrong number of arguments.");
     }
 
-    Local<Value> _rgbArray = args[0];
+    Local<Value> _rgbArray = info[0];
     vector<RGBWithCount> rgbArray;
 
     // tranform color param
@@ -46,15 +47,16 @@ NAN_METHOD(MindifferGet)
 
         rgbArray.clear();
 
-        NanReturnUndefined();
+        info.GetReturnValue().Set(Nan::Undefined());
+        return;
     }
 
     // color palette
     vector<Palette> palette;
-    if(args.Length() == 1) Palette::GetDefaultPalette(&palette);
+    if(info.Length() == 1) Palette::GetDefaultPalette(&palette);
     else
     {
-        Local<Value> _palette = args[1];
+        Local<Value> _palette = info[1];
         Palette::V8ToPalette(_palette, &palette);
     }
 
@@ -65,12 +67,16 @@ NAN_METHOD(MindifferGet)
     mindiffer.calculate(&colorCount);
 
     // translate vector to v8::Array
-    Local<Array> result = NanNew<Array>(colorCount.size());
+    Local<Array> result = Nan::New<Array>(colorCount.size());
     for(unsigned int i = 0; i < colorCount.size(); i++)
     {
-        Local<Object> obj = NanNew<Object>();
-        obj->Set(NanNew<String>("color"), NanNew<String>(colorCount[i]->color));
-        obj->Set(NanNew<String>("count"), NanNew<Integer>(colorCount[i]->count));
+        Local<Object> obj = Nan::New<Object>();
+        obj->Set(Nan::New<String>("color").ToLocalChecked(),
+                Nan::New<String>(colorCount[i]->color).ToLocalChecked());
+
+        obj->Set(Nan::New<String>("count").ToLocalChecked(),
+                Nan::New<Integer>(colorCount[i]->count));
+
         result->Set(i, obj);
     }
 
@@ -82,32 +88,30 @@ NAN_METHOD(MindifferGet)
     rgbArray.clear();
     Octree::recycleColorCount(&colorCount);
 
-    NanReturnValue(result);
+    info.GetReturnValue().Set(result);
 }
 
 NAN_METHOD(OctreeGet)
 {
-    NanScope();
-
-    if(args.Length() < 1)
+    if(info.Length() < 1)
     {
-        NanThrowError("Wrong number of arguments.");
-        NanReturnUndefined();
+        return Nan::ThrowError("Wrong number of arguments.");
     }
 
     // Needs one argument - RGB Object Array
-    Local<Value> _rgbArray = args[0];
+    Local<Value> _rgbArray = info[0];
     if(!_rgbArray->IsArray()) 
     {
-        NanThrowTypeError("Arguments should be an array.");
-        NanReturnUndefined();
+        Nan::ThrowTypeError("Arguments should be an array.");
+        info.GetReturnValue().Set(Nan::Undefined());
+        return;
     }
 
     // max colors
     int maxColor = 256;
-    if(args.Length() > 1 && args[1]->IsInt32())
+    if(info.Length() > 1 && info[1]->IsInt32())
     {
-        maxColor = args[1]->ToInt32()->Value();
+        maxColor = info[1]->ToInt32()->Value();
     }
 
     Local<Array> rgbArray = Local<Array>::Cast(_rgbArray);
@@ -122,25 +126,22 @@ NAN_METHOD(OctreeGet)
         {
             // recycle...
             thmclrx::RGB::recycleArray(pRGBs, i - 1);
-
-            NanThrowTypeError("Pixel array is not all objects.");
-            NanReturnUndefined();
+            return Nan::ThrowTypeError("Pixel array is not all objects.");
         }
 
         Local<Object> preRGB = rgbArray->Get(i)->ToObject();
-        if(!preRGB->Get(NanNew<String>("r"))->IsInt32() ||
-                !preRGB->Get(NanNew<String>("g"))->IsInt32() ||
-                !preRGB->Get(NanNew<String>("b"))->IsInt32())
+        if(!preRGB->Get(Nan::New<String>("r").ToLocalChecked())->IsInt32() ||
+                !preRGB->Get(Nan::New<String>("g").ToLocalChecked())->IsInt32() ||
+                !preRGB->Get(Nan::New<String>("b").ToLocalChecked())->IsInt32())
         {
             thmclrx::RGB::recycleArray(pRGBs, i - 1);
-            NanThrowTypeError("Pixel array's elements must contains r, g and b.");
-            NanReturnUndefined();
+            return Nan::ThrowTypeError("Pixel array's elements must contains r, g and b.");
         }
 
         thmclrx::RGB* tmp = g_PoolRGB.Create();
-        tmp->red = preRGB->Get(NanNew<String>("r"))->ToInt32()->Value();
-        tmp->green = preRGB->Get(NanNew<String>("g"))->ToInt32()->Value();
-        tmp->blue = preRGB->Get(NanNew<String>("b"))->ToInt32()->Value();
+        tmp->red = preRGB->Get(Nan::New<String>("r").ToLocalChecked())->ToInt32()->Value();
+        tmp->green = preRGB->Get(Nan::New<String>("g").ToLocalChecked())->ToInt32()->Value();
+        tmp->blue = preRGB->Get(Nan::New<String>("b").ToLocalChecked())->ToInt32()->Value();
 
         pRGBs[i] = tmp;
     }
@@ -154,14 +155,14 @@ NAN_METHOD(OctreeGet)
     tree.colorStats(tree.getRoot(), &colorCount);
 
     // translate vector to v8::Array
-    Local<Array> result = NanNew<Array>(colorCount.size());
-    Local<String> colorSymbol = NanNew<String>("color");
-    Local<String> countSymbol = NanNew<String>("count");
+    Local<Array> result = Nan::New<Array>(colorCount.size());
+    Local<String> colorSymbol = Nan::New<String>("color").ToLocalChecked();
+    Local<String> countSymbol = Nan::New<String>("count").ToLocalChecked();
     for(unsigned int i = 0; i < colorCount.size(); i++)
     {
-        Local<Object> obj = NanNew<Object>();
-        obj->Set(colorSymbol, NanNew<String>(colorCount[i]->color));
-        obj->Set(countSymbol, NanNew<Integer>(colorCount[i]->count));
+        Local<Object> obj = Nan::New<Object>();
+        obj->Set(colorSymbol, Nan::New<String>(colorCount[i]->color).ToLocalChecked());
+        obj->Set(countSymbol, Nan::New<Integer>(colorCount[i]->count));
 
         result->Set(i, obj);
     }
@@ -171,29 +172,26 @@ NAN_METHOD(OctreeGet)
     thmclrx::RGB::recycleArray(pRGBs, pixelCount);
     delete []pRGBs;
 
-    NanReturnValue(result);
+    info.GetReturnValue().Set(result);
 }
 
 NAN_METHOD(CleanPool)
 {
-    NanScope();
-
     g_PoolRGB.Clean();
     g_PoolColorCount.Clean();
     Octree::cleanPool();
 
-    NanReturnUndefined();
+    info.GetReturnValue().Set(Nan::Undefined());
 }
 
-void Init(Handle<Object> exports)
+NAN_MODULE_INIT(Init)
 {
-    exports->Set(NanNew<String>("octreeGet"),
-            NanNew<FunctionTemplate>(OctreeGet)->GetFunction());
-    exports->Set(NanNew<String>("mindifferGet"),
-            NanNew<FunctionTemplate>(MindifferGet)->GetFunction());
-    exports->Set(NanNew<String>("cleanPool"),
-            NanNew<FunctionTemplate>(CleanPool)->GetFunction());
+    Nan::Set(target, Nan::New<String>("octreeGet").ToLocalChecked(),
+            Nan::GetFunction(Nan::New<FunctionTemplate>(OctreeGet)).ToLocalChecked());
+    Nan::Set(target, Nan::New<String>("mindifferGet").ToLocalChecked(),
+            Nan::GetFunction(Nan::New<FunctionTemplate>(MindifferGet)).ToLocalChecked());
+    Nan::Set(target, Nan::New<String>("cleanPool").ToLocalChecked(),
+            Nan::GetFunction(Nan::New<FunctionTemplate>(CleanPool)).ToLocalChecked());
 }
 
 NODE_MODULE(thmclrx, Init);
-
