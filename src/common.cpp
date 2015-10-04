@@ -296,11 +296,9 @@ namespace thmclrx
 
     void Palette::V8ToPalette(Local<Value> value, vector<Palette>* palette)
     {
-        NanScope();
-
-        Local<String> symbolR = NanNew<String>("r");
-        Local<String> symbolG = NanNew<String>("g");
-        Local<String> symbolB = NanNew<String>("b");
+        Local<String> symbolR = Nan::New<String>("r").ToLocalChecked();
+        Local<String> symbolG = Nan::New<String>("g").ToLocalChecked();
+        Local<String> symbolB = Nan::New<String>("b").ToLocalChecked();
 
         if(!value->IsArray())
         {
@@ -325,11 +323,15 @@ namespace thmclrx
                 return;
             }
 
-            Palette p = { obj->Get(symbolR)->ToInt32()->Value(), obj->Get(symbolG)->ToInt32()->Value(), obj->Get(symbolB)->ToInt32()->Value() };
+            Palette p = {
+                obj->Get(symbolR)->ToInt32()->Value(),
+                obj->Get(symbolG)->ToInt32()->Value(),
+                obj->Get(symbolB)->ToInt32()->Value()
+            };
+
             palette->push_back(p);
         }
 
         return;
     }
 };
-
