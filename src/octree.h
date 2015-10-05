@@ -18,7 +18,6 @@
 #ifndef __OCTREE_H__
 #define __OCTREE_H__
 
-#include <v8.h>
 #include "common.h"
 #include <list>
 #include <vector>
@@ -57,4 +56,3 @@ public:
 };
 
 #endif
-

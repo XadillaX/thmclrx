@@ -194,4 +194,3 @@ void Octree::colorStats(OctreeNode* node, vector<ColorCount*>* colors)
         sort(colors->begin(), colors->end(), ColorCount::cmp);
     }
 }
-
