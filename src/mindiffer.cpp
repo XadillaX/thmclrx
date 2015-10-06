@@ -30,19 +30,17 @@ inline int diff_square(int a, int b)
 
 bool MinDiffer::TransformColorParam(Local<Value> param, vector<RGBWithCount>* rgb)
 {
-    NanScope();
-
     Local<String> _ColorParamKeys[] = {
-        NanNew<String>("color"),
-        NanNew<String>("count"),
-        NanNew<String>("r"),
-        NanNew<String>("g"),
-        NanNew<String>("b")
+        Nan::New<String>("color").ToLocalChecked(),
+        Nan::New<String>("count").ToLocalChecked(),
+        Nan::New<String>("r").ToLocalChecked(),
+        Nan::New<String>("g").ToLocalChecked(),
+        Nan::New<String>("b").ToLocalChecked()
     };
 
     if(!param->IsArray())
     {
-        NanThrowTypeError("The first argument should be an array.");
+        Nan::ThrowTypeError("The first argument should be an array.");
         return false;
     }
 
@@ -54,7 +52,7 @@ bool MinDiffer::TransformColorParam(Local<Value> param, vector<RGBWithCount>* rg
     {
         if(!array->Get(i)->IsObject())
         {
-            NanThrowTypeError("Elements in first argument must be objects.");
+            Nan::ThrowTypeError("Elements in first argument must be objects.");
             return false;
         }
 
@@ -64,7 +62,7 @@ bool MinDiffer::TransformColorParam(Local<Value> param, vector<RGBWithCount>* rg
                 obj->Get(_ColorParamKeys[1])->IsInt32() &&
                 Local<String>::Cast(obj->Get(_ColorParamKeys[0]))->Length() >= 6)
         {
-            strcpy(colorStr, **(new NanAsciiString(obj->Get(_ColorParamKeys[0]))));
+            strcpy(colorStr, *(String::Utf8Value(obj->Get(_ColorParamKeys[0]))));
 
             // is all [0123456789ABCDEF]
             for(int j = 0; j < 6; j++)
@@ -73,7 +71,7 @@ bool MinDiffer::TransformColorParam(Local<Value> param, vector<RGBWithCount>* rg
                         !(colorStr[j] >= 'A' && colorStr[j] <= 'F') &&
                         !(colorStr[j] >= 'a' && colorStr[j] <= 'f'))
                 {
-                    NanThrowTypeError("Wrong argument in color pixel array 1.");
+                    Nan::ThrowTypeError("Wrong argument in color pixel array 1.");
                     return false;
                 }
             }
@@ -108,7 +106,7 @@ bool MinDiffer::TransformColorParam(Local<Value> param, vector<RGBWithCount>* rg
         }
         else
         {
-            NanThrowTypeError("Wrong argument in color pixel array 2.");
+            Nan::ThrowTypeError("Wrong argument in color pixel array 2.");
             return false;
         }
     }
@@ -124,18 +122,8 @@ MinDiffer::MinDiffer(vector<RGBWithCount>* pixels, vector<Palette>* palette) :
 
 void MinDiffer::calculate(vector<thmclrx::ColorCount*>* colors)
 {
-    NanScope();
-
     // Gray colors
     vector<thmclrx::ColorCount*> grayColors;
-
-    Local<String> _ColorParamKeys[] = {
-        NanNew<String>("color"),
-        NanNew<String>("count"),
-        NanNew<String>("r"),
-        NanNew<String>("g"),
-        NanNew<String>("b")
-    };
 
     for(unsigned int i = 0; i < _palette->size(); i++)
     {
@@ -237,4 +225,3 @@ void MinDiffer::calculate(vector<thmclrx::ColorCount*>* colors)
         colors->pop_back();
     }
 }
-
