@@ -10,6 +10,9 @@
         {
             "target_name": "byakuren",
             "type": "static_library",
+            "dependencies": [
+                "xmempool"
+            ],
             "sources": [
                 "./deps/byakuren/byakuren.c",
                 "./deps/byakuren/common.c",
@@ -22,7 +25,6 @@
         {
             "target_name": "thmclrx",
             "dependencies": [
-                "xmempool",
                 "byakuren"
             ],
             "sources": [

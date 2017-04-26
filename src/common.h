@@ -18,7 +18,6 @@
 #define __COMMON_H__
 #include <string>
 #include <v8.h>
-#include "mempool.h"
 #include <byakuren/byakuren.h>
 
 namespace __thmclrx__ {
@@ -26,9 +25,6 @@ namespace __thmclrx__ {
 typedef struct RGB : bkr_rgb
 {
     void ColorString(char* str);
-
-    // for recycling RGB objects generated from MemoryPool
-    static void RecycleArray(RGB* array[], int count);
 } RGB;
 
 typedef struct Palette : bkr_palette_array
@@ -52,8 +48,6 @@ typedef struct PicturePixels
 } PicturePixels;
 
 v8::Local<v8::Array> StatsToV8(bkr_color_stats stats[], unsigned int count);
-
-extern MemoryPool<RGB> rgb_pool;
 
 }
 

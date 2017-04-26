@@ -21,23 +21,11 @@
 
 namespace __thmclrx__ {
 
-MemoryPool<RGB> rgb_pool;
-
 const Palette default_palette(256, _default_palette.colors);
 
 void RGB::ColorString(char* str)
 {
     sprintf(str, "%.2X%.2X%.2X", this->red, this->green, this->blue);
-}
-
-void RGB::RecycleArray(RGB* array[], int count)
-{
-    for(int i = 0; i < count; i++)
-    {
-        rgb_pool.Recycle(array[i]);
-    }
-
-    memset(array, 0, count * sizeof(RGB));
 }
 
 Palette::Palette(int count, bkr_rgb* colors)
