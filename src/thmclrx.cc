@@ -27,8 +27,6 @@ NAN_METHOD(GetByOctree)
         return Nan::ThrowError("Wrong number of arguments.");
     }
 
-    // This function only need one argument
-    // -- the RGB object array
     if(!info[0]->IsArray())
     {
         return Nan::ThrowTypeError("The argument should be an array.");
@@ -48,29 +46,103 @@ NAN_METHOD(GetByOctree)
     }
 
     bkr_octree_node* root = bkr_build_octree(pixels.colors, pixels.count, max_color);
-    bkr_color_stats stats[pixels.count];
+    bkr_color_stats stats[max_color];
     unsigned int color_count = bkr_octree_calculate_color_stats(root, stats);
 
     bkr_release_octree(root);
     PicturePixels::SafeDestroyInner(&pixels);
 
-    v8::Local<v8::Array> ret = Nan::New<v8::Array>(color_count);
-    v8::Local<v8::String> _color_key = Nan::New("color").ToLocalChecked();
-    v8::Local<v8::String> _count_key = Nan::New("count").ToLocalChecked();
+    info.GetReturnValue().Set(StatsToV8(stats, color_count));
+}
 
-    v8::Local<v8::Object> obj;
-    char exported_color[7];
-    for(unsigned int i = 0; i < color_count; i++)
+NAN_METHOD(GetByMinDiff)
+{
+    if(info.Length() < 1)
     {
-        obj = Nan::New<v8::Object>();
-        ((RGB*)&stats[i].color)->ColorString(exported_color);
-        obj->Set(_color_key, Nan::New(exported_color).ToLocalChecked());
-        obj->Set(_count_key, Nan::New(stats[i].count));
-
-        ret->Set(i, obj);
+        return Nan::ThrowError("Wrong number of arguments.");
     }
 
-    info.GetReturnValue().Set(ret);
+    if(!info[0]->IsArray())
+    {
+        return Nan::ThrowTypeError("The argument should be an array.");
+    }
+
+    v8::Local<v8::Array> rgb_array = v8::Local<v8::Array>::Cast(info[0]);
+    PicturePixels pixels;
+    if(!PicturePixels::CreateFromV8(rgb_array, &pixels))
+    {
+        return Nan::ThrowTypeError("Failed to recognize pixels.");
+    }
+
+    Palette palette(0, NULL);
+    if(info.Length() != 1)
+    {
+        Palette::CreateFromV8(info[1], &palette);
+    }
+    else
+    {
+        palette = *Palette::GetDefaultPalette();
+    }
+
+    bkr_color_stats stats[palette.count];
+    bkr_mindiff_parameter param;
+    param.gray_offset = 5;
+    param.palette = &palette;
+
+    unsigned int color_count = bkr_mindiff_calculate_color_stats(pixels.colors, pixels.count, stats, &param);
+
+    PicturePixels::SafeDestroyInner(&pixels);
+    Palette::SafeDestroyInner(&palette);
+
+    info.GetReturnValue().Set(StatsToV8(stats, color_count));
+}
+
+NAN_METHOD(GetByMixed)
+{
+    if(info.Length() < 1)
+    {
+        return Nan::ThrowError("Wrong number of arguments.");
+    }
+
+    if(!info[0]->IsArray())
+    {
+        return Nan::ThrowTypeError("The argument should be an array.");
+    }
+
+    v8::Local<v8::Array> rgb_array = v8::Local<v8::Array>::Cast(info[0]);
+    PicturePixels pixels;
+    if(!PicturePixels::CreateFromV8(rgb_array, &pixels))
+    {
+        return Nan::ThrowTypeError("Failed to recognize pixels.");
+    }
+
+    unsigned int max_color = 256;
+    if(info.Length() > 1 && info[1]->IsInt32())
+    {
+        max_color = Nan::To<v8::Int32>(info[1]).ToLocalChecked()->Value();
+    }
+
+    Palette palette(0, NULL);
+    if(info.Length() >= 3)
+    {
+        Palette::CreateFromV8(info[2], &palette);
+    }
+    else
+    {
+        palette = *Palette::GetDefaultPalette();
+    }
+
+    bkr_color_stats stats[palette.count];
+    bkr_mindiff_parameter param;
+    param.gray_offset = 5;
+    param.palette = &palette;
+
+    unsigned int color_count = bkr_mix_calculate_color_stats(pixels.colors, pixels.count, max_color, &param, stats);
+
+    PicturePixels::SafeDestroyInner(&pixels);
+    Palette::SafeDestroyInner(&palette);
+
+    info.GetReturnValue().Set(StatsToV8(stats, color_count));
 }
 
 NAN_MODULE_INIT(Init)
@@ -81,6 +153,16 @@ NAN_MODULE_INIT(Init)
     //   "Getting by octree"
     Nan::Set(target, Nan::New("getByOctree").ToLocalChecked(),
             Nan::New<v8::FunctionTemplate>(GetByOctree)->GetFunction());
+
+    // Set the function of
+    //   "Getting by mindiff"
+    Nan::Set(target, Nan::New("getByMinDiff").ToLocalChecked(),
+            Nan::New<v8::FunctionTemplate>(GetByMinDiff)->GetFunction());
+
+    // Set the function of
+    //   "Getting by mixed"
+    Nan::Set(target, Nan::New("getByMixed").ToLocalChecked(),
+            Nan::New<v8::FunctionTemplate>(GetByMixed)->GetFunction());
 }
 
 }

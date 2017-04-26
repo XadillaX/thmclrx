@@ -37,7 +37,7 @@ typedef struct Palette : bkr_palette_array
 
     // for some functions of V8
     static const Palette* GetDefaultPalette();
-    static void V8ToPalette(v8::Local<v8::Value> value, Palette* palette);
+    static void CreateFromV8(v8::Local<v8::Value> value, Palette* palette);
     static void SafeDestroyInner(Palette* palette);
 } Palette;
 
@@ -50,6 +50,8 @@ typedef struct PicturePixels
     static bool CreateFromV8(v8::Local<v8::Value> value, PicturePixels* pixels);
     static void SafeDestroyInner(PicturePixels* pixels);
 } PicturePixels;
+
+v8::Local<v8::Array> StatsToV8(bkr_color_stats stats[], unsigned int count);
 
 extern MemoryPool<RGB> rgb_pool;
 

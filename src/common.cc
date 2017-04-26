@@ -51,7 +51,7 @@ const Palette* Palette::GetDefaultPalette()
     return &default_palette;
 }
 
-void Palette::V8ToPalette(v8::Local<v8::Value> value, Palette* palette)
+void Palette::CreateFromV8(v8::Local<v8::Value> value, Palette* palette)
 {
     Nan::HandleScope scope;
 
@@ -162,6 +162,29 @@ void PicturePixels::SafeDestroyInner(PicturePixels* pixels)
 
     pixels->colors = NULL;
     pixels->count = 0;
+}
+
+v8::Local<v8::Array> StatsToV8(bkr_color_stats stats[], unsigned int count)
+{
+    Nan::HandleScope scope;
+
+    v8::Local<v8::Array> ret = Nan::New<v8::Array>(count);
+    v8::Local<v8::String> _color_key = Nan::New("color").ToLocalChecked();
+    v8::Local<v8::String> _count_key = Nan::New("count").ToLocalChecked();
+
+    v8::Local<v8::Object> obj;
+    char exported_color[7];
+    for(unsigned int i = 0; i < count; i++)
+    {
+        obj = Nan::New<v8::Object>();
+        ((RGB*)&stats[i].color)->ColorString(exported_color);
+        obj->Set(_color_key, Nan::New(exported_color).ToLocalChecked());
+        obj->Set(_count_key, Nan::New(stats[i].count));
+
+        ret->Set(i, obj);
+    }
+
+    return ret;
 }
 
 }
