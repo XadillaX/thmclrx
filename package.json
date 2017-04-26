@@ -7,7 +7,7 @@
     "test": "test"
   },
   "dependencies": {
-    "nan": "^2.1.0",
+    "nan": "^2.6.2",
     "pixel-getter": "^0.0.5",
     "sugar": "^1.4.1"
   },

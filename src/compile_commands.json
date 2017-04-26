@@ -1,8 +1,0 @@
-[
-    {
-        "directory": "/tmp",
-        "command": "g++ thmclrx.cpp",
-        "file": "thmclrx.cpp"
-    }
-]
-

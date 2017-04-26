@@ -14,44 +14,52 @@
  *
  * MIT LIcense <https://github.com/XadillaX/thmclrx/blob/master/LICENSE>
  */
-#ifndef __COMMON_H__
-#define __COMMON_H__
-#include <string>
-#include <v8.h>
-#include "mempool.h"
-#include <byakuren/byakuren.h>
+#ifndef __MEMPOOL_H__
+#define __MEMPOOL_H__
+#include <xmempool/xmempool.h>
 
 namespace __thmclrx__ {
 
-typedef struct RGB : bkr_rgb
+template <class T>
+class MemoryPool
 {
-    void ColorString(char* str);
+private:
+    xmem_pool_handle    _pool;
 
-    // for recycling RGB objects generated from MemoryPool
-    static void RecycleArray(RGB* array[], int count);
-} RGB;
+    void _GeneratePool()
+    {
+        if(!_pool) _pool = xmem_create_pool(sizeof(T));
+    }
 
-typedef struct Palette : bkr_palette_array
-{
-    Palette(int count, bkr_rgb* colors);
+public:
+    MemoryPool() : _pool(0) {}
+    ~MemoryPool()
+    {
+        if(_pool)
+        {
+            xmem_destroy_pool(_pool);
+        }
+    }
 
-    // for some functions of V8
-    static const Palette* GetDefaultPalette();
-    static void V8ToPalette(v8::Local<v8::Value> value, Palette* palette);
-    static void SafeDestroyInner(Palette* palette);
-} Palette;
+    inline T* Create()
+    {
+        _GeneratePool();
+        return (T*)xmem_alloc(_pool);
+    }
 
-typedef struct PicturePixels
-{
-    RGB* colors;
-    unsigned int count;
+    inline void Clean()
+    {
+        if(!_pool) return;
+        xmem_destroy_pool(_pool);
+        _pool = 0;
+    }
 
-    // for some functions of V8
-    static bool CreateFromV8(v8::Local<v8::Value> value, PicturePixels* pixels);
-    static void SafeDestroyInner(PicturePixels* pixels);
-} PicturePixels;
-
-extern MemoryPool<RGB> rgb_pool;
+    inline void Recycle(T* t)
+    {
+        _GeneratePool();
+        xmem_free(_pool, (char*)t);
+    }
+};
 
 }
 

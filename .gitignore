@@ -40,4 +40,4 @@ build
 .ropeproject
 
 .DS_Store
-
+*.bak

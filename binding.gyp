@@ -4,22 +4,35 @@
             "target_name": "xmempool",
             "type": "static_library",
             "sources": [
-                "./src/third-party/xmempool/xmempool.c"
+                "./deps/byakuren/third-party/xmempool/xmempool.c"
+            ]
+        },
+        {
+            "target_name": "byakuren",
+            "type": "static_library",
+            "sources": [
+                "./deps/byakuren/byakuren.c",
+                "./deps/byakuren/common.c",
+                "./deps/byakuren/const/palette.c",
+                "./deps/byakuren/lib/mindiff.c",
+                "./deps/byakuren/lib/mix.c",
+                "./deps/byakuren/lib/octree.c"
             ]
         },
         {
             "target_name": "thmclrx",
             "dependencies": [
-                "xmempool"
+                "xmempool",
+                "byakuren"
             ],
             "sources": [
-                "./src/thmclrx.cpp",
-                "./src/octree.cpp",
-                "./src/mindiffer.cpp",
-                "./src/common.cpp"
+                "./src/thmclrx.cc",
+                "./src/common.cc"
             ],
             "include_dirs": [
-                "<!(node -e \"require('nan')\")"
+                "<!(node -e \"require('nan')\")",
+                "deps",
+                "deps/byakuren/third-party"
             ]
         }
     ]
