@@ -3,28 +3,23 @@
 [![thmclrx](http://img.shields.io/npm/v/thmclrx.svg)](https://www.npmjs.org/package/thmclrx)
 [![thmclrx](http://img.shields.io/npm/dm/thmclrx.svg)](https://www.npmjs.org/package/thmclrx)
 
-A theme color extractor module for Node.js with ❤.
-
-> Now **thmclrx** is supporting [Nodejs](http://nodejs.org/) `v4`!
+A theme color extractor module for Node.js with ❤ and built on the top of [Byakuren](https://github.com/XadillaX/byakuren).
 
 ## Algorithm
 
-+ Minimum Differ Algorithm
-+ Octree Algorithm
++ [x] Minimum Differ Algorithm
++ [x] Octree Algorithm
++ [x] Mixed Algorithm
 
 ## Installation
 
 ```sh
-$ npm install thmclrx
+$ npm install thmclrx --save
 ```
 
 ## API
 
-There only three API in node.js now.
-
-> After version 0.2.0, we use a new
-> [memory pool](https://github.com/XadillaX/xmempool/tree/b06351836c9b51952a3d98c438df6626dda8738c)
-> for thmclrx.
+There only three API in Node.js now.
 
 ### octreeGet
 
@@ -75,61 +70,54 @@ thmclrx.mixGet(file, [firstStepMaxColors], [palette], [callback], [frameNumber])
 + `callback`: same as the two functions above.
 + `frameNumber`: same as the two functions above.
 
-### cleanPool
-
-Clean memory pool in `thmclrx` C++ program.
-
-```javascript
-var thmclrx = require("thmclrx");
-thmclrx.cleanPool();
-```
-
-> Normally, you do not need to call it.
-
 ## C++ API
 
 If you want to use C++ API directly, you can refer to this.
 
-### octreeGet
+### getByOctree
 
-This function is called in `octreeGet` in node.js API.
+This function is called in `octreeGet` in Node.js API.
 
 ```javascript
-var thmclrx = require("thmclrx/build/Release/thmclrx.node");
-var colors = thmclrx.octreeGet(pixels, [maxColor]);
+var thmclrx = require("thmclrx").cpp;
+var colors = thmclrx.getByOctree(pixels, [maxColor]);
 ```
 
 + `pixels`: this is an array in the struct of `[ { r: .., g: .., b: .., },
   { r: .., g: .., b: .. } ]`.
-+ `maxColor`: same as the `maxColors` in `octreeGet` of node.js API. Defaults to 256.
++ `maxColor`: same as the `maxColors` in `octreeGet` of Node.js API. Defaults to 256.
 + `@return`: this function will return the theme colors.
 
-### mindifferGet
+### getByMinDiff
 
-This function is called in `mindiffGet` in node.js API.
+This function is called in `mindiffGet` in Node.js API.
 
 ```javascript
-var thmclrx = require("thmclrx/build/Release/thmclrx.node");
-var colors = thmclrx.mindifferGet(pixels, [palette]);
+var thmclrx = require("thmclrx").cpp;
+var colors = thmclrx.getByMinDiff(pixels, [palette]);
 ```
 
 + `pixels`: this may be same as the `pixels` in `octreeGet` of C++ API. Otherwise,
   it may be the result of `octreeGet` of C++ API.
-+ `palette`: same as the `palette` in `mindiffGet` of node.js API. Same default value.
++ `palette`: same as the `palette` in `mindiffGet` of Node.js API. Same default value.
 + `@return`: this function will return the theme colors.
 
-### cleanPool
+### getByMixed
 
-Clean memory pool.
+This function is called in `mixGet` in Node.js API.
 
 ```javascript
-var thmclrx = require("thmclrx/build/Release/thmclrx.node");
-thmclrx.clearPool();
+var thmclrx = require("thmclrx").cpp;
+var colors = thmclrx.getByMixed(pixels, maxColors, palette);
 ```
 
-> Normally, you do not need to call it.
++ `pixels`: this may be same as the `pixels` in `octreeGet` of C++ API. Otherwise,
+  it may be the result of `octreeGet` of C++ API.
++ `maxColors`: same as the `maxColors` in `octreeGet` of Node.js API.
++ `palette`: same as the `palette` in `mindiffGet` of Node.js API.
++ `@return`: this function will return the theme colors.
 
 ## Contribute
 
-You're welcome to fork and pull requests!
+You're welcome to fork and make pull requests!
 

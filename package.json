@@ -8,8 +8,7 @@
   },
   "dependencies": {
     "nan": "^2.6.2",
-    "pixel-getter": "^0.0.5",
-    "sugar": "^1.4.1"
+    "pixel-getter": "^0.0.5"
   },
   "devDependencies": {},
   "scripts": {
