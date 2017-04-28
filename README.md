@@ -7,9 +7,9 @@ A theme color extractor module for Node.js with ❤ and built on the top of [Bya
 
 ## Algorithm
 
-+ [o] Minimum Differ Algorithm
-+ [o] Octree Algorithm
-+ [o] Mixed Algorithm
+- [x] Minimum Differ Algorithm
+- [x] Octree Algorithm
+- [x] Mixed Algorithm
 
 ## Installation
 
