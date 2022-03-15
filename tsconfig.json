@@ -1,0 +1,7 @@
+{
+  "extends": "@artus/tsconfig",
+  "exclude": [
+    "lib",
+    "test"
+  ]
+}

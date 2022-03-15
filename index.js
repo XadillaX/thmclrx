@@ -10,11 +10,11 @@
  *                                                    "7888888Y
  * ThmclrX - A theme color extractor module for Node.js. "e88j
  *                                                         "Y
- * Copyright (c) 2018 XadillaX <i@2333.moe>
+ * Copyright (c) 2022 XadillaX <i@2333.moe>
  *
  * MIT LIcense <https://github.com/XadillaX/thmclrx/blob/master/LICENSE>
  */
-"use strict";
+'use strict';
 
-module.exports = require("./lib/x");
-module.exports.cpp = require("./build/Release/thmclrx");
+module.exports = require('./lib/x');
+module.exports.cpp = require('./build/Release/thmclrx');

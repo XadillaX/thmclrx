@@ -3,17 +3,25 @@
   "version": "1.0.0",
   "description": "A theme color extractor module for Node.js.",
   "main": "index.js",
-  "directories": {
-    "test": "test"
-  },
+  "typings": "index.d.ts",
   "dependencies": {
-    "nan": "^2.6.2",
+    "nan": "^2.15.0",
     "pixel-getter": "^0.0.5"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@artus/tsconfig": "^0.0.1",
+    "@types/node": "^17.0.21",
+    "clang-format": "^1.6.0",
+    "eslint": "^8.11.0",
+    "eslint-config-egg": "^11.0.1"
+  },
   "scripts": {
-    "test": "node test/test.js",
-    "install": "node-gyp rebuild"
+    "clang-format": "./tools/clang_format.js --style=file -i ./src/*.cc ./src/*.h",
+    "cpplint": "./deps/cpplint/cpplint.py src/*.*",
+    "generate_compile_commands": "node-gyp -- configure -f=gyp.generator.compile_commands_json.py && mv Release/compile_commands.json compile_commands.json && rm -rf Release && rm -rf Debug",
+    "install": "node-gyp rebuild",
+    "postinstall": "rm -f package-lock.json",
+    "test": "node test/test.js"
   },
   "repository": {
     "type": "git",
@@ -31,7 +39,7 @@
     "color extractor",
     "pixel"
   ],
-  "author": "XadillaX",
+  "author": "XadillaX <i@2333.moe>",
   "license": "MIT",
   "gypfile": true,
   "bugs": {

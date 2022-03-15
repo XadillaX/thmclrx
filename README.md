@@ -7,14 +7,14 @@ A theme color extractor module for Node.js with ❤ and built on the top of [Bya
 
 ## Algorithm
 
-- [x] Minimum Differ Algorithm
-- [x] Octree Algorithm
-- [x] Mixed Algorithm
+- Minimum Differ Algorithm
+- Octree Algorithm
+- Mixed Algorithm
 
 ## Installation
 
-```sh
-$ npm install thmclrx --save
+```shell
+$ npm install --save thmclrx
 ```
 
 ## API
@@ -126,6 +126,6 @@ But if you're using native APIs (C++ APIs), you should read the [new document](#
 
 ## Contribute
 
-You're welcome to fork and make pull requests!
+Issues and PRs are welcomed!
 
 「雖然我覺得不怎麼可能有人會關注我」

@@ -10,7 +10,7 @@
  *                                                    "7888888Y
  * ThmclrX - A theme color extractor module for Node.js. "e88j
  *                                                         "Y
- * Copyright (c) 2018 XadillaX <i@2333.moe>
+ * Copyright (c) 2022 XadillaX <i@2333.moe>
  *
  * MIT LIcense <https://github.com/XadillaX/thmclrx/blob/master/LICENSE>
  */
@@ -20,151 +20,154 @@
 
 namespace __thmclrx__ {
 
-NAN_METHOD(GetByOctree)
-{
-    if(info.Length() < 1)
-    {
-        return Nan::ThrowError("Wrong number of arguments.");
-    }
+using v8::Array;
+using v8::Context;
+using v8::Local;
+using v8::Uint32;
 
-    if(!info[0]->IsArray())
-    {
-        return Nan::ThrowTypeError("The argument should be an array.");
-    }
+NAN_METHOD(GetByOctree) {
+  if (info.Length() < 1) {
+    return Nan::ThrowError("Wrong number of arguments.");
+  }
 
-    v8::Local<v8::Array> rgb_array = v8::Local<v8::Array>::Cast(info[0]);
-    PicturePixels pixels;
-    if(!PicturePixels::CreateFromV8(rgb_array, &pixels))
-    {
-        return Nan::ThrowTypeError("Failed to recognize pixels.");
-    }
+  if (!info[0]->IsArray()) {
+    return Nan::ThrowTypeError("The argument should be an array.");
+  }
 
-    unsigned int max_color = 256;
-    if(info.Length() > 1 && info[1]->IsInt32())
-    {
-        max_color = Nan::To<v8::Int32>(info[1]).ToLocalChecked()->Value();
-    }
+  Local<Array> rgb_array = info[0].As<Array>();
+  PicturePixels pixels;
+  if (!PicturePixels::CreateFromV8(rgb_array, &pixels)) {
+    return Nan::ThrowTypeError("Failed to recognize pixels.");
+  }
 
-    bkr_octree_node* root = bkr_build_octree(pixels.colors, pixels.count, max_color);
-    bkr_color_stats stats[max_color];
-    unsigned int color_count = bkr_octree_calculate_color_stats(root, stats);
+  size_t max_color = 256;
+  if (info.Length() > 1 && info[1]->IsUint32()) {
+    max_color = Nan::To<Uint32>(info[1]).ToLocalChecked()->Value();
+  }
 
-    bkr_release_octree(root);
-    PicturePixels::SafeDestroyInner(&pixels);
+  bkr_octree_node* root =
+      bkr_build_octree(pixels.colors, pixels.count, max_color);
+  bkr_color_stats* stats = reinterpret_cast<bkr_color_stats*>(
+      malloc(sizeof(bkr_color_stats) * max_color));
+  size_t color_count = bkr_octree_calculate_color_stats(root, stats);
 
-    info.GetReturnValue().Set(StatsToV8(stats, color_count));
+  bkr_release_octree(root);
+  PicturePixels::SafeDestroyInner(&pixels);
+
+  info.GetReturnValue().Set(StatsToV8(stats, color_count));
+  free(stats);
 }
 
-NAN_METHOD(GetByMinDiff)
-{
-    if(info.Length() < 1)
-    {
-        return Nan::ThrowError("Wrong number of arguments.");
-    }
+NAN_METHOD(GetByMinDiff) {
+  if (info.Length() < 1) {
+    return Nan::ThrowError("Wrong number of arguments.");
+  }
 
-    if(!info[0]->IsArray())
-    {
-        return Nan::ThrowTypeError("The argument should be an array.");
-    }
+  if (!info[0]->IsArray()) {
+    return Nan::ThrowTypeError("The argument should be an array.");
+  }
 
-    v8::Local<v8::Array> rgb_array = v8::Local<v8::Array>::Cast(info[0]);
-    PicturePixels pixels;
-    if(!PicturePixels::CreateFromV8(rgb_array, &pixels))
-    {
-        return Nan::ThrowTypeError("Failed to recognize pixels.");
-    }
+  Local<Array> rgb_array = info[0].As<Array>();
+  PicturePixels pixels;
+  if (!PicturePixels::CreateFromV8(rgb_array, &pixels)) {
+    return Nan::ThrowTypeError("Failed to recognize pixels.");
+  }
 
-    Palette palette(0, NULL);
-    if(info.Length() != 1)
-    {
-        Palette::CreateFromV8(info[1], &palette);
-    }
-    else
-    {
-        palette = *Palette::GetDefaultPalette();
-    }
+  Palette palette(0, nullptr);
+  if (info.Length() != 1) {
+    Palette::CreateFromV8(info[1], &palette);
+  } else {
+    palette = *Palette::GetDefaultPalette();
+  }
 
-    bkr_color_stats stats[palette.count];
-    bkr_mindiff_parameter param;
-    param.gray_offset = 5;
-    param.palette = &palette;
+  bkr_color_stats* stats = reinterpret_cast<bkr_color_stats*>(
+      malloc(sizeof(bkr_color_stats) * palette.count));
+  bkr_mindiff_parameter param;
+  param.gray_offset = 5;
+  param.palette = &palette;
 
-    unsigned int color_count = bkr_mindiff_calculate_color_stats(pixels.colors, pixels.count, stats, &param);
+  size_t color_count = bkr_mindiff_calculate_color_stats(
+      pixels.colors, pixels.count, stats, &param);
 
-    PicturePixels::SafeDestroyInner(&pixels);
-    Palette::SafeDestroyInner(&palette);
+  PicturePixels::SafeDestroyInner(&pixels);
+  Palette::SafeDestroyInner(&palette);
 
-    info.GetReturnValue().Set(StatsToV8(stats, color_count));
+  info.GetReturnValue().Set(StatsToV8(stats, color_count));
+  free(stats);
 }
 
-NAN_METHOD(GetByMixed)
-{
-    if(info.Length() < 1)
-    {
-        return Nan::ThrowError("Wrong number of arguments.");
-    }
+NAN_METHOD(GetByMixed) {
+  if (info.Length() < 1) {
+    return Nan::ThrowError("Wrong number of arguments.");
+  }
 
-    if(!info[0]->IsArray())
-    {
-        return Nan::ThrowTypeError("The argument should be an array.");
-    }
+  if (!info[0]->IsArray()) {
+    return Nan::ThrowTypeError("The argument should be an array.");
+  }
 
-    v8::Local<v8::Array> rgb_array = v8::Local<v8::Array>::Cast(info[0]);
-    PicturePixels pixels;
-    if(!PicturePixels::CreateFromV8(rgb_array, &pixels))
-    {
-        return Nan::ThrowTypeError("Failed to recognize pixels.");
-    }
+  Local<Array> rgb_array = info[0].As<Array>();
+  PicturePixels pixels;
+  if (!PicturePixels::CreateFromV8(rgb_array, &pixels)) {
+    return Nan::ThrowTypeError("Failed to recognize pixels.");
+  }
 
-    unsigned int max_color = 256;
-    if(info.Length() > 1 && info[1]->IsInt32())
-    {
-        max_color = Nan::To<v8::Int32>(info[1]).ToLocalChecked()->Value();
-    }
+  size_t max_color = 256;
+  if (info.Length() > 1 && info[1]->IsUint32()) {
+    max_color = Nan::To<Uint32>(info[1]).ToLocalChecked()->Value();
+  }
 
-    Palette palette(0, NULL);
-    if(info.Length() >= 3)
-    {
-        Palette::CreateFromV8(info[2], &palette);
-    }
-    else
-    {
-        palette = *Palette::GetDefaultPalette();
-    }
+  Palette palette(0, nullptr);
+  if (info.Length() >= 3) {
+    Palette::CreateFromV8(info[2], &palette);
+  } else {
+    palette = *Palette::GetDefaultPalette();
+  }
 
-    bkr_color_stats stats[palette.count];
-    bkr_mindiff_parameter param;
-    param.gray_offset = 5;
-    param.palette = &palette;
+  bkr_color_stats* stats = reinterpret_cast<bkr_color_stats*>(
+      malloc(sizeof(bkr_color_stats) * palette.count));
+  bkr_mindiff_parameter param;
+  param.gray_offset = 5;
+  param.palette = &palette;
 
-    unsigned int color_count = bkr_mix_calculate_color_stats(pixels.colors, pixels.count, max_color, &param, stats);
+  size_t color_count = bkr_mix_calculate_color_stats(
+      pixels.colors, pixels.count, max_color, &param, stats);
 
-    PicturePixels::SafeDestroyInner(&pixels);
-    Palette::SafeDestroyInner(&palette);
+  PicturePixels::SafeDestroyInner(&pixels);
+  Palette::SafeDestroyInner(&palette);
 
-    info.GetReturnValue().Set(StatsToV8(stats, color_count));
+  info.GetReturnValue().Set(StatsToV8(stats, color_count));
+  free(stats);
 }
 
-NAN_MODULE_INIT(Init)
-{
-    bkr_init();
+NAN_MODULE_INIT(Init) {
+  bkr_init();
+  Local<Context> context = target->GetIsolate()->GetCurrentContext();
 
-    // Set the function of
-    //   "Getting by octree"
-    Nan::Set(target, Nan::New("getByOctree").ToLocalChecked(),
-            Nan::New<v8::FunctionTemplate>(GetByOctree)->GetFunction());
+  // Set the function of
+  //   "Getting by octree"
+  Nan::Set(target,
+           Nan::New("getByOctree").ToLocalChecked(),
+           Nan::New<v8::FunctionTemplate>(GetByOctree)
+               ->GetFunction(context)
+               .ToLocalChecked());
 
-    // Set the function of
-    //   "Getting by mindiff"
-    Nan::Set(target, Nan::New("getByMinDiff").ToLocalChecked(),
-            Nan::New<v8::FunctionTemplate>(GetByMinDiff)->GetFunction());
+  // Set the function of
+  //   "Getting by mindiff"
+  Nan::Set(target,
+           Nan::New("getByMinDiff").ToLocalChecked(),
+           Nan::New<v8::FunctionTemplate>(GetByMinDiff)
+               ->GetFunction(context)
+               .ToLocalChecked());
 
-    // Set the function of
-    //   "Getting by mixed"
-    Nan::Set(target, Nan::New("getByMixed").ToLocalChecked(),
-            Nan::New<v8::FunctionTemplate>(GetByMixed)->GetFunction());
+  // Set the function of
+  //   "Getting by mixed"
+  Nan::Set(target,
+           Nan::New("getByMixed").ToLocalChecked(),
+           Nan::New<v8::FunctionTemplate>(GetByMixed)
+               ->GetFunction(context)
+               .ToLocalChecked());
 }
 
-}
+}  // namespace __thmclrx__
 
 NODE_MODULE(thmclrx, __thmclrx__::Init);
