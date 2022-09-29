@@ -1,6 +1,6 @@
 {
   "name": "thmclrx",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "A theme color extractor module for Node.js.",
   "main": "index.js",
   "typings": "index.d.ts",
@@ -38,6 +38,18 @@
     "extractor",
     "color extractor",
     "pixel"
+  ],
+  "files": [
+    "deps/byakuren",
+    "!deps/byakuren/third-party/xmempool/tools",
+    "!deps/byakuren/.git",
+    "lib",
+    "src",
+    "binding.gyp",
+    "index.d.ts",
+    "index.js",
+    "logo.svg",
+    "tsconfig.json"
   ],
   "author": "XadillaX <i@2333.moe>",
   "license": "MIT",
