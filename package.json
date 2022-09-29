@@ -1,6 +1,6 @@
 {
   "name": "thmclrx",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "A theme color extractor module for Node.js.",
   "main": "index.js",
   "typings": "index.d.ts",
