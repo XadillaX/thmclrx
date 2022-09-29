@@ -5,6 +5,9 @@
             "type": "static_library",
             "sources": [
                 "./deps/byakuren/third-party/xmempool/xmempool.c"
+            ],
+            "cflags": [
+                "-std=c99"
             ]
         },
         {
@@ -20,6 +23,9 @@
                 "./deps/byakuren/lib/mindiff.c",
                 "./deps/byakuren/lib/mix.c",
                 "./deps/byakuren/lib/octree.c"
+            ],
+            "cflags": [
+                "-std=c99"
             ]
         },
         {
