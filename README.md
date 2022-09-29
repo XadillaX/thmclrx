@@ -1,9 +1,24 @@
-# ThmclrX
+<p align="center">
+  <img src="https://github.com/XadillaX/thmclrx/raw/master/logo.svg" alt="Thmclrx" />
+</p>
 
-[![thmclrx](http://img.shields.io/npm/v/thmclrx.svg)](https://www.npmjs.org/package/thmclrx)
-[![thmclrx](http://img.shields.io/npm/dm/thmclrx.svg)](https://www.npmjs.org/package/thmclrx)
+<p align="center">
+  <a href="https://github.com/sponsors/XadillaX"><img src="https://github.com/XadillaX/vscode-language-viml/raw/master/assets/github_sponsor_btn.png" /></a>
+</p>
 
-A theme color extractor module for Node.js with ❤ and built on the top of [Byakuren](https://github.com/XadillaX/byakuren).
+<p align="center">
+  <a href="https://www.npmjs.org/package/thmclrx">
+    <img src="http://img.shields.io/npm/v/thmclrx.svg" />
+  </a>
+
+  <a href="https://www.npmjs.org/package/thmclrx">
+    <img src="http://img.shields.io/npm/dm/thmclrx.svg" />
+  </a>
+</p>
+
+<p align="center">
+  A theme color extractor module for Node.js with ❤ and built on the top of <a href="https://github.com/XadillaX/byakuren">Byakuren</a>.
+</p>
 
 ## Algorithm
 
