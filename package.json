@@ -6,7 +6,7 @@
   "typings": "index.d.ts",
   "dependencies": {
     "nan": "^2.15.0",
-    "pixel-getter": "^0.0.5"
+    "pixel-getter": "^1.0.0"
   },
   "devDependencies": {
     "@artus/tsconfig": "^0.0.1",
