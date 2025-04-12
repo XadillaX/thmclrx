@@ -18,7 +18,7 @@
             ],
             "sources": [
                 "./deps/byakuren/byakuren.c",
-                "./deps/byakuren/common.c",
+                "./deps/byakuren/bkr_common.c",
                 "./deps/byakuren/const/palette.c",
                 "./deps/byakuren/lib/mindiff.c",
                 "./deps/byakuren/lib/mix.c",
