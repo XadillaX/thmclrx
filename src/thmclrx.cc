@@ -49,6 +49,12 @@ NAN_METHOD(GetByOctree) {
       bkr_build_octree(pixels.colors, pixels.count, max_color);
   bkr_color_stats* stats = reinterpret_cast<bkr_color_stats*>(
       malloc(sizeof(bkr_color_stats) * max_color));
+  if (stats == nullptr) {
+    bkr_release_octree(root);
+    PicturePixels::SafeDestroyInner(&pixels);
+    return Nan::ThrowError("Failed to allocate the color stats buffer.");
+  }
+
   size_t color_count = bkr_octree_calculate_color_stats(root, stats);
 
   bkr_release_octree(root);
@@ -82,6 +88,12 @@ NAN_METHOD(GetByMinDiff) {
 
   bkr_color_stats* stats = reinterpret_cast<bkr_color_stats*>(
       malloc(sizeof(bkr_color_stats) * palette.count));
+  if (stats == nullptr) {
+    PicturePixels::SafeDestroyInner(&pixels);
+    Palette::SafeDestroyInner(&palette);
+    return Nan::ThrowError("Failed to allocate the color stats buffer.");
+  }
+
   bkr_mindiff_parameter param;
   param.gray_offset = 5;
   param.palette = &palette;
@@ -125,6 +137,12 @@ NAN_METHOD(GetByMixed) {
 
   bkr_color_stats* stats = reinterpret_cast<bkr_color_stats*>(
       malloc(sizeof(bkr_color_stats) * palette.count));
+  if (stats == nullptr) {
+    PicturePixels::SafeDestroyInner(&pixels);
+    Palette::SafeDestroyInner(&palette);
+    return Nan::ThrowError("Failed to allocate the color stats buffer.");
+  }
+
   bkr_mindiff_parameter param;
   param.gray_offset = 5;
   param.palette = &palette;
